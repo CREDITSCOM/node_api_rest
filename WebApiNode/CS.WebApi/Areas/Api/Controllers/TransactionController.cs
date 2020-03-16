@@ -13,14 +13,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CS.WebApi.Areas.Api.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class TransactionController : ApplicationController
     {
 
         public TransactionController(IServiceProvider provider) : base(provider) { }
         [AuthKeyFilter]
-        [HttpPost]
+        [HttpPost("Pack")]
         // [AuthKey]
         /// <summary>
         /// Упаковка транзакции 
@@ -57,7 +57,7 @@ namespace CS.WebApi.Areas.Api.Controllers
         }
 
         [AuthKeyFilter]
-        [HttpPost]
+        [HttpPost("Execute")]
        // [AuthKey]
         /// <summary>
         /// Выполнение транзакции. Которая предварительно уже была упакована отправлена
