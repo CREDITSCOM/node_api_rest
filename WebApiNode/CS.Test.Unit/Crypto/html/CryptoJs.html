@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="js/nacl.js"></script>
+    <script src="js/base64.js"></script>
+    <script src="js/base58.js"></script>
+</head>
+<body>
+    <div id="test"></div>
+
+
+    <script>
+         //if (1 == 2) {
+        var str = "5nr7HxqLfuoZV64eaSZ54oWWh85FM8meyM1SorMjuzDoJ1Fv1mmvVPgmYxc6hQEue4JC8NQquV5pyseu2xnazRFEcCNVxiNWTzJDKkEQCTKCTh6xywXFb5";
+        var private = "ohPH5zghdzmRDxd978r7y6r8YFoTcKm1MgW2gzik3omCuZLysjwNjTd9hnGREFyQHqhShoU4ri7q748UgdwZpzA";
+        var sign = nacl.sign.detached(Base58.decode(str),
+            Base58.decode("ohPH5zghdzmRDxd978r7y6r8YFoTcKm1MgW2gzik3omCuZLysjwNjTd9hnGREFyQHqhShoU4ri7q748UgdwZpzA"));
+
+        console.log(Base58.encode(sign));
+
+        // проверка старого кода!!!!
+        //var private = "ohPH5zghdzmRDxd978r7y6r8YFoTcKm1MgW2gzik3omCuZLysjwNjTd9hnGREFyQHqhShoU4ri7q748UgdwZpzA";
+        // str = "C80300000000D98EC5840A3C559294C01C6DBECEA35E755E1FCBCDEF35CBE3819058227E83AFD7FCDEBABEA3E3EF5DD3E41A7ECDE55040827349DC9717D6093185A8C8828C2C0000000000008A5D78456301FF470100";
+        // console.log(ConvertSign(str, Base58.decode(private)));
+        //
+        //function ConvertSign(Priv, private) {
+        //    let Sign = new Uint8Array(Priv.length / 2);
+
+        //    var ArHex = "0123456789ABCDEF";
+
+        //    for (let i = 0; i < Priv.length; i++) {
+        //        for (let j = 0; j < ArHex.length; j++) {
+        //            if (ArHex[j] === Priv[i]) {
+        //                Sign[i / 2] += Number(j) * 16;
+        //            }
+
+        //            if (ArHex[j] === Priv[i + 1]) {
+        //                Sign[i / 2] += Number(j);
+        //            }
+        //        }
+        //        i++;
+        //    }
+
+        //    Sign = nacl.sign.detached(Sign, private);
+        //    Priv = "";
+        //    for (var j = 0; j < Sign.length; j++) {
+        //        Priv += ArHex[Math.floor(Sign[j] / 16)];
+        //        Priv += ArHex[Math.floor(Sign[j] % 16)];
+        //    }
+        //    return Priv;
+        //}
+
+    </script>
+</body>
+</html>

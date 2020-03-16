@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20191115142148_RestUserEnity.cs" />
+    <Compile Remove="Migrations\20191115142148_RestUserEnity.Designer.cs" />
+    <Compile Remove="Migrations\20191115144840_RestUserEnity.cs" />
+    <Compile Remove="Migrations\20191115144840_RestUserEnity.Designer.cs" />
+    <Compile Remove="Migrations\20191119063147_Init1.cs" />
+    <Compile Remove="Migrations\20191119063147_Init1.Designer.cs" />
+    <Compile Remove="Migrations\20191119063731_Init1.cs" />
+    <Compile Remove="Migrations\20191119063731_Init1.Designer.cs" />
+    <Compile Remove="Migrations\20191119064631_Init.cs" />
+    <Compile Remove="Migrations\20191119064631_Init.Designer.cs" />
+    <Compile Remove="Migrations\20191119065336_Init.cs" />
+    <Compile Remove="Migrations\20191119065336_Init.Designer.cs" />
+    <Compile Remove="Migrations\20191119065832_Init.cs" />
+    <Compile Remove="Migrations\20191119065832_Init.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

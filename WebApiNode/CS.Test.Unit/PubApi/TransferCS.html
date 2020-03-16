@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Transfer CS</title>
+</head>
+
+<body>
+
+    <button onclick="transferCS()">transfer CS</button>
+    <div id="container"></div>
+</body>
+<script src="js/Base58.js"></script>
+<script src="js/nacl.js"></script>
+<script>
+    var _BASE_URL = "http://rest.creditsenterprise.com/api";
+    var _HTTP_CONF_POST = {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+    var _privateKey =
+        "";
+
+    async function transferCS() {
+        let model = {
+            networkAlias: "MainNet",
+            networkIp: "68.183.230.109",
+            networkPort: "9090",
+            publicKey: "",
+            receiverPublicKey: "",
+           
+            amount: 0.1,
+            methodApi: "TransferCs",
+            fee: 0.1
+        };
+        let responseFromPackTr = await packTransaction(model);
+
+    }
+
+    async function packTransaction(model = {}) {
+
+        _HTTP_CONF_POST.body = JSON.stringify(model);
+        let rsp = fetch(`${_BASE_URL}/transaction/pack`, _HTTP_CONF_POST)
+            .then(d => d.json())
+            .then(r => {
+
+
+                console.log("responseFromPackTr:");
+                console.log(r);
+                model.transactionPackagedStr = r.dataResponse.transactionPackagedStr;
+                executeTransaction(model);
+
+            })
+        let result = "";
+        return result;
+    }
+
+    async function executeTransaction(model = {}) {
+        console.log("===EXECUTE TR MODEL: ");
+        console.log(model);
+        console.log("===EXECUTE TR transactionPackagedStr: ");
+        console.log(model.transactionPackagedStr);
+        console.log("===EXECUTE TR privateKey: ");
+        console.log(_privateKey);
+        let _signature = nacl.sign.detached(
+            Base58.decode(model.transactionPackagedStr),
+            Base58.decode(_privateKey)
+        );
+
+        model.transactionSignature = Base58.encode(_signature);
+        console.log("===EXECUTE TR signature: ");
+        console.log(model.transactionSignature);
+        _HTTP_CONF_POST.body = JSON.stringify(model);
+        fetch(`${_BASE_URL}/transaction/execute`, _HTTP_CONF_POST)
+            .then(d => d.json())
+            .then(r => renderResponseResult("container", r));
+
+        return ""
+    }
+
+    function renderResponseResult(selector, d = {}) {
+        let el = document.getElementById(selector);
+        el.innerText = d;
+    }
+</script>
+
+</html>

@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\js\s\Base58.js" />
+    <Content Remove="wwwroot\js\s\CreditsWork.js" />
+    <Content Remove="wwwroot\js\s\Extension.js" />
+    <Content Remove="wwwroot\js\s\t1.js" />
+    <Content Remove="wwwroot\js\s\transactions.js" />
+    <Content Remove="wwwroot\js\s\Work.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.1" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Api\Data\" />
+    <Folder Include="Areas\Api\Models\" />
+    <Folder Include="Areas\Api\Views\" />
+    <Folder Include="Areas\Moder\Data\" />
+    <Folder Include="Areas\Moder\Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\s\Base58.js" />
+    <None Include="wwwroot\js\s\CreditsWork.js" />
+    <None Include="wwwroot\js\s\Extension.js" />
+    <None Include="wwwroot\js\s\t1.js" />
+    <None Include="wwwroot\js\s\transactions.js" />
+    <None Include="wwwroot\js\s\Work.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CS.Db\CS.Db.csproj" />
+    <ProjectReference Include="..\CS.NodeApi\CS.NodeApi.csproj" />
+    <ProjectReference Include="..\CS.Service\CS.Service.csproj" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+</Project>

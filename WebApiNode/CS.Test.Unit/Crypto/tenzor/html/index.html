@@ -1,0 +1,52 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://connect.trezor.io/7/trezor-connect.js"></script>
+    <script src="https://credits.com/Content/js/jquery.min.js"></script>
+</head>
+<body>
+    <h1>DSxxxWQ</h1>
+    <button id="get_public_key">Get Public Key</button>
+    <button id="get_signing">Signing pls</button>
+    <p id="result"></p>
+    <script>
+        var TrezorConnect = window.TrezorConnect;
+
+        TrezorConnect.manifest({
+            email: 'kl@credits.com',
+            appUrl: 'https://credits.com'
+        })
+
+        $('#get_public_key').click(function(){
+            TrezorConnect.getPublicKey({
+                bundle: [
+                    { path: "m/49'/0'/0'/0/0" }
+                ]
+            }).then(function(result) {
+                resolve_getPubk = result.payload;
+                console.log(resolve_getPubk[0].publicKey);
+                $('#result').append(resolve_getPubk[0].publicKey+'<br/>');
+            })
+        })
+      
+        /*TrezorConnect.getPublicKey({
+            bundle: [
+                { path: "m/49'/0'/0'/0/0" }
+            ]
+        }).then(function(result) {
+            resolve_getPubk = result.payload;
+            console.log(resolve_getPubk);
+        })*/
+
+        $('#get_signing').click(function(){
+            TrezorConnect.signMessage({
+                path: "m/49'/0'/0'/0/0",
+                message: "CreditswTest message"
+            }).then(function(result) {
+                console.log(result);
+                $('#result').append(result.payload.signature + '<br/>');
+                 console.log(result.payload.signature);
+            })
+        })
+    </script>
+</body>
+</html>

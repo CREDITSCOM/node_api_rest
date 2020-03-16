@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>CREXT</title>
+	<link rel="shortcut icon" type="image/png" href="https://bonoox.com/Content/Images/Bonoox-blue-ico.ico">
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900&amp;subset=cyrillic" rel="stylesheet">
+	<link rel="stylesheet" href="css/style.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/Extension.js"></script>
+	<script src="js/transactions.js"></script>
+</head>
+<body class="transaction-page">
+	<div class="transaction-window">
+		<header>
+			<div class="top-line">
+				<div class="logo">
+					<img src="img/Logo.png" class="logoimg">
+				</div>
+				<div class="login">
+					<span>Confirm transaction</span>
+				</div>
+			</div>
+		</header>
+		<div class="wrapper">
+			<div class="ro-wr">
+				<label for="public">Website</label>
+				<input class="info-in" readonly id="website">
+			</div>
+			<div class="ro-wr">
+				<label for="public">Target</label>
+				<input class="info-in" readonly id="target">
+			</div>
+			<div class="ro-wr">
+				<label for="public">Amount</label>
+				<input class="info-in" readonly id="amount">
+			</div>
+			<div class="ro-wr">
+				<label for="public">Max fee</label>
+				<input class="info-in"  readonly id="fee">
+			</div>
+			<div class="ro-wr">
+				<label for="public">Duration time</label>
+				<select class="info-in" id="time">
+					<option value="One">One transaction</option>
+					<option value="Two">10 minutes</option>
+					<option value="Three">30 minutes</option>
+				</select>
+			</div>
+		</div>
+		<div class="button-line">
+			<div class="button-c" id="cancel">
+				Cancel
+			</div>
+			<div class="button-blue" id="send">
+				Confirm
+			</div>
+		</div>
+		<footer>
+			<span>Powered by Credits</span>
+		</footer>
+	</div>
+</body>
+</html>

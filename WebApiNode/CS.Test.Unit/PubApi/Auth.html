@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Auth</title>
+</head>
+<button onclick="generateAuth()">Generate auth keys</button>
+<h4 id="pub">public key</h4>
+<h4 id="prv">private key</h4>
+<script src="js/Base58.js"></script>
+<script src="js/nacl.js"></script>
+<script>
+    function generateAuth() {
+        let pair = nacl.sign.keyPair();
+        let privateKey = Base58.encode(pair.secretKey);
+        let publicKey = Base58.encode(pair.publicKey);
+
+        document.getElementById("pub").innerText = publicKey;
+        document.getElementById("prv").innerText = privateKey;
+    }
+</script>
+
+<body>
+
+</body>
+
+</html>
