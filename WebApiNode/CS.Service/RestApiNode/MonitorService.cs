@@ -118,23 +118,25 @@ namespace CS.Service.RestApiNode
                 response.Balance = BCTransactionTools.GetDecimalByAmount(result.WalletData.Balance);
                 response.LastTransaction = result.WalletData.LastTransactionId;
                 var dStr = new DelegatedStructure();
-                dStr.Incoming = BCTransactionTools.GetDecimalByAmount(result.WalletData.Delegated.Incoming);
-                dStr.Outgoing = BCTransactionTools.GetDecimalByAmount(result.WalletData.Delegated.Outgoing);
-                foreach (var it in result.WalletData.Delegated.Donors)
-                {
-                    var item = new DelegatedInfo();
-                    item.PublicKey = SimpleBase.Base58.Bitcoin.Encode(it.Wallet);
-                    item.Sum = BCTransactionTools.GetDecimalByAmount(it.Sum);
-                    item.ValidUntil = it.ValidUntil;
-                    dStr.Donors.Add(item);
-                }
-                foreach (var it in result.WalletData.Delegated.Recipients)
-                {
-                    var item = new DelegatedInfo();
-                    item.PublicKey = SimpleBase.Base58.Bitcoin.Encode(it.Wallet);
-                    item.Sum = BCTransactionTools.GetDecimalByAmount(it.Sum);
-                    item.ValidUntil = it.ValidUntil;
-                    dStr.Recipients.Add(item);
+                if (result.WalletData.Delegated != null) {
+                    dStr.Incoming = BCTransactionTools.GetDecimalByAmount(result.WalletData.Delegated.Incoming);
+                    dStr.Outgoing = BCTransactionTools.GetDecimalByAmount(result.WalletData.Delegated.Outgoing);
+                    foreach (var it in result.WalletData.Delegated.Donors)
+                    {
+                        var item = new DelegatedInfo();
+                        item.PublicKey = SimpleBase.Base58.Bitcoin.Encode(it.Wallet);
+                        item.Sum = BCTransactionTools.GetDecimalByAmount(it.Sum);
+                        item.ValidUntil = it.ValidUntil;
+                        dStr.Donors.Add(item);
+                    }
+                    foreach (var it in result.WalletData.Delegated.Recipients)
+                    {
+                        var item = new DelegatedInfo();
+                        item.PublicKey = SimpleBase.Base58.Bitcoin.Encode(it.Wallet);
+                        item.Sum = BCTransactionTools.GetDecimalByAmount(it.Sum);
+                        item.ValidUntil = it.ValidUntil;
+                        dStr.Recipients.Add(item);
+                    }
                 }
                 response.Delegated = dStr;
             }
