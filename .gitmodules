@@ -1,0 +1,3 @@
+[submodule "WebApiNode/third-party/node_api"]
+	path = WebApiNode/third-party/node_api
+	url = https://gitlab.com/credits_bc/web/node_api.git
