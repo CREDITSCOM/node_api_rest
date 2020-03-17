@@ -84,7 +84,7 @@ namespace CS.WebApi.Areas.Api.Controllers
         public ActionResult<ResponseApiModel> GetWalletData(RequestApiModel model)
         {
             InitAuthKey(model);
-            ResponseApiModel res;
+            WalletDataResponseApiModel res;
             try
             {
                 res = ServiceProvider.GetService<MonitorService>().GetWalletData(model);
@@ -93,7 +93,7 @@ namespace CS.WebApi.Areas.Api.Controllers
             }
             catch (Exception ex)
             {
-                res = new ResponseApiModel();
+                res = new WalletDataResponseApiModel();
                 res.Success = false;
                 res.MessageError = ex.Message;
             }
