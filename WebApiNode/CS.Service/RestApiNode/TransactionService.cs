@@ -72,7 +72,7 @@ namespace CS.Service.RestApiNode
                 if (model.Fee == 0)
                 {
                     Decimal res;
-                    if (Decimal.TryParse(model.FeeAsString.Replace(",", "."), NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out res))
+                    if (!string.IsNullOrWhiteSpace(model.FeeAsString) && Decimal.TryParse(model.FeeAsString.Replace(",", "."), NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out res))
                         transac.Fee = BCTransactionTools.EncodeFeeFromDouble(Decimal.ToDouble(res));
                     else
                         transac.Fee = BCTransactionTools.EncodeFeeFromDouble(Decimal.ToDouble(model.Fee));

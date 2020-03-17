@@ -15,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CS.WebApi.Areas.Api.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class MonitorController : ApplicationController
     {
