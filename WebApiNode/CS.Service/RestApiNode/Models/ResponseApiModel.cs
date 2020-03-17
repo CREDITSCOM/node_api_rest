@@ -50,6 +50,49 @@ namespace CS.Service.RestApiNode.Models
     }
 
 
+    public partial class WalletDataResponseApiModel
+    {
+        public WalletDataResponseApiModel()
+        {
+            Delegated = new DelegatedStructure();
+        }
+        public Decimal Balance { get; set; }
+
+        public long LastTransaction { get; set; }
+
+        public DelegatedStructure Delegated { get; set; }
+
+        public bool Success { get; set; }
+
+        public string MessageError { get; set; }
+    }
+
+
+    public partial class DelegatedStructure
+    {
+        public DelegatedStructure()
+        {
+            Donors = new List<DelegatedInfo>();
+            Recipients = new List<DelegatedInfo>();
+        }
+        public Decimal Incoming { get; set; }
+
+        public Decimal Outgoing { get; set; }
+
+        public ICollection<DelegatedInfo> Donors { get; set; }
+
+        public ICollection<DelegatedInfo> Recipients { get; set; }
+    }
+
+
+    public partial class DelegatedInfo
+    {
+        public string PublicKey { get; set; }
+
+        public Decimal Sum { get; set; }
+
+        public long ValidUntil { get; set; }
+    }
     /// <summary>
     /// Модель одиночный элемент
     /// </summary>

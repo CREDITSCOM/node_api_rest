@@ -54,7 +54,7 @@ namespace CS.Service.RestApiNode
                 {
                     if (String.IsNullOrEmpty(item.Balance))
                         continue;
-
+                     
                     var item1 = new ItemListApiModel();
                     item1.Alias = item.Code;
                     item1.IsCs = false;
@@ -105,14 +105,38 @@ namespace CS.Service.RestApiNode
         }
 
 
-        public ResponseApiModel GetWalletData(AbstractRequestApiModel model)
+        public WalletDataResponseApiModel GetWalletData(AbstractRequestApiModel model)
         {
-            var response = new ResponseApiModel();
+            var response = new WalletDataResponseApiModel();
 
             using (var client = GetClientByModel(model))
             {
                 var publicKeyByte = SimpleBase.Base58.Bitcoin.Decode(model.PublicKey);
                 var result = client.WalletDataGet(publicKeyByte.ToArray());
+ 
+
+                response.Balance = BCTransactionTools.GetDecimalByAmount(result.WalletData.Balance);
+                response.LastTransaction = result.WalletData.LastTransactionId;
+                var dStr = new DelegatedStructure();
+                dStr.Incoming = BCTransactionTools.GetDecimalByAmount(result.WalletData.Delegated.Incoming);
+                dStr.Outgoing = BCTransactionTools.GetDecimalByAmount(result.WalletData.Delegated.Outgoing);
+                foreach (var it in result.WalletData.Delegated.Donors)
+                {
+                    var item = new DelegatedInfo();
+                    item.PublicKey = SimpleBase.Base58.Bitcoin.Encode(it.Wallet);
+                    item.Sum = BCTransactionTools.GetDecimalByAmount(it.Sum);
+                    item.ValidUntil = it.ValidUntil;
+                    dStr.Donors.Add(item);
+                }
+                foreach (var it in result.WalletData.Delegated.Recipients)
+                {
+                    var item = new DelegatedInfo();
+                    item.PublicKey = SimpleBase.Base58.Bitcoin.Encode(it.Wallet);
+                    item.Sum = BCTransactionTools.GetDecimalByAmount(it.Sum);
+                    item.ValidUntil = it.ValidUntil;
+                    dStr.Recipients.Add(item);
+                }
+                response.Delegated = dStr;
             }
 
             return response;
