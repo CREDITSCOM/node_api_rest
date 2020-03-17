@@ -72,7 +72,7 @@ namespace CS.Service.RestApiNode
             return response;
         }
 
-        public ResponseApiModel GetTransaction(AbstractRequestApiModel model)
+        public ResponseApiModel GetTransaction(RequestTransactionApiModel model)
         {
             var response = new ResponseApiModel();
 

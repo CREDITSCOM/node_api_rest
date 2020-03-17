@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Thrift.Protocol;
-using Thrift.Transport;
 using NodeApi;
 
 namespace CS.NodeApi.Api
@@ -17,11 +14,7 @@ namespace CS.NodeApi.Api
         /// <returns></returns>
         public static API.Client CreateContextBC(string networkIp, int port, int timeout)
         {
-            var socket = new TSocket(networkIp, port);
-            TBinaryProtocol tr = new TBinaryProtocol(socket);
-            var contextBC = new API.Client(tr);
-            socket.Open();
-            return contextBC;
+            return NodeAPIClient.Api.ClientFactory.CreatePublicAPIClient(networkIp, port, timeout);
         }
 
         /// <summary>

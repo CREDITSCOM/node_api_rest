@@ -1,14 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="apache-thrift-netcore" Version="0.9.3.2" />
     <PackageReference Include="Rebex.Elliptic.Ed25519" Version="1.2.0" />
     <PackageReference Include="SauceControl.Blake2Fast" Version="1.0.0" />
-    <PackageReference Include="SimpleBase" Version="3.0.0" />
+    <PackageReference Include="SimpleBase" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\third-party\node_api\NodeAPIClient\NodeAPIClient.csproj" />
   </ItemGroup>
 
 </Project>

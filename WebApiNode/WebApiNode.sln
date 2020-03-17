@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS.Test.Unit", "CS.Test.Uni
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS.WebPublic", "CS.WebPublic\CS.WebPublic.csproj", "{AF742CD3-99F1-4AE0-9A68-A1576BA0E1AB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NodeAPIClient", "third-party\node_api\NodeAPIClient\NodeAPIClient.csproj", "{8CA77D67-C269-4066-8F17-59913ADF62FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{AF742CD3-99F1-4AE0-9A68-A1576BA0E1AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF742CD3-99F1-4AE0-9A68-A1576BA0E1AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF742CD3-99F1-4AE0-9A68-A1576BA0E1AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CA77D67-C269-4066-8F17-59913ADF62FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CA77D67-C269-4066-8F17-59913ADF62FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CA77D67-C269-4066-8F17-59913ADF62FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CA77D67-C269-4066-8F17-59913ADF62FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

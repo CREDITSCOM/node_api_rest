@@ -231,5 +231,25 @@ namespace CS.WebApi.Areas.Api.Controllers
             return Ok(res);
         }
 
+        public ActionResult<ResponseBlocksApiModel> GetBlocksRange(RequestBlockApiModel model)
+        {
+            InitAuthKey(model);
+            ResponseBlocksApiModel res;
+            try
+            {
+                res = ServiceProvider.GetService<GetBlocksService>().GetBlocksRange(model);
+
+                res.Success = true;
+            }
+            catch (Exception ex)
+            {
+                res = new ResponseBlocksApiModel();
+                res.Success = false;
+                res.MessageError = ex.Message;
+            }
+
+            return Ok(res);
+        }
+
     }
 }

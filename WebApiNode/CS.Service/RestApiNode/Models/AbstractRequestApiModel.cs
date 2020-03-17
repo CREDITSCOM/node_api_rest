@@ -18,6 +18,10 @@ namespace CS.Service.RestApiNode.Models
 
         public string PublicKey { get; set; }
 
+    }
+
+    public abstract class RequestTransactionApiModel : AbstractRequestApiModel
+    {
         public string TransactionId { get; set; }
     }
 }

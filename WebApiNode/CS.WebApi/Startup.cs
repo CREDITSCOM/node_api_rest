@@ -31,6 +31,7 @@ namespace CS.WebApi
             services.AddDbContext<AppDbContext>(opts => opts.UseSqlServer(Configuration["ConnectionStrings:default"]));
             services.AddSingleton(opt => new TransactionService(Configuration));
             services.AddSingleton(opt => new MonitorService(Configuration));
+            services.AddSingleton(opt => new GetBlocksService(Configuration));
             services.AddOpenApiDocument();
         }
 

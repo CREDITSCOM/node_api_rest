@@ -18,8 +18,36 @@ namespace CS.WebApi.Controllers
             ServiceProvider = provider;
         }
 
+        //[NonAction]
+        //public void InitAuthKey(RequestApiModel model)
+        //{
+        //    StringValues authKey = StringValues.Empty;
+        //    var request = HttpContext.Request;
+        //    request.Headers.TryGetValue("AuthKey", out authKey);
+        //    if (authKey.Count > 0)
+        //    {
+        //        var key = authKey.FirstOrDefault();
+        //        model.AuthKey = key;
+        //    }
+
+        //}
+
+        //[NonAction]
+        //public void InitAuthKey(RequestGetterApiModel model)
+        //{
+        //    StringValues authKey = StringValues.Empty;
+        //    var request = HttpContext.Request;
+        //    request.Headers.TryGetValue("AuthKey", out authKey);
+        //    if (authKey.Count > 0)
+        //    {
+        //        var key = authKey.FirstOrDefault();
+        //        model.AuthKey = key;
+        //    }
+
+        //}
+
         [NonAction]
-        public void InitAuthKey(RequestApiModel model)
+        public void InitAuthKey(AbstractRequestApiModel model)
         {
             StringValues authKey = StringValues.Empty;
             var request = HttpContext.Request;
@@ -32,18 +60,5 @@ namespace CS.WebApi.Controllers
 
         }
 
-        [NonAction]
-        public void InitAuthKey(RequestGetterApiModel model)
-        {
-            StringValues authKey = StringValues.Empty;
-            var request = HttpContext.Request;
-            request.Headers.TryGetValue("AuthKey", out authKey);
-            if (authKey.Count > 0)
-            {
-                var key = authKey.FirstOrDefault();
-                model.AuthKey = key;
-            }
-
-        }
     }
 }

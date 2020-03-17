@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -36,7 +36,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Nethereum.Web3" Version="3.6.0" />
-    <PackageReference Include="SimpleBase" Version="3.0.0" />
+    <PackageReference Include="SimpleBase" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>

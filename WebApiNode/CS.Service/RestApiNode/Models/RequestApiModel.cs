@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CS.Service.RestApiNode.Models
 {
-    public class RequestApiModel : AbstractRequestApiModel
+    public class RequestApiModel : RequestTransactionApiModel
     {
         public RequestApiModel()
         {

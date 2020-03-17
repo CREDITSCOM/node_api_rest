@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="apache-thrift-netcore" Version="0.9.3.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.1" />
     <PackageReference Include="SauceControl.Blake2Fast" Version="1.0.0" />
-    <PackageReference Include="SimpleBase" Version="3.0.0" />
+    <PackageReference Include="SimpleBase" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CS.Db\CS.Db.csproj" />
     <ProjectReference Include="..\CS.NodeApi\CS.NodeApi.csproj" />
+    <ProjectReference Include="..\third-party\node_api\NodeAPIClient\NodeAPIClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>
