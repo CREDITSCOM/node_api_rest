@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CS.Service.RestApiNode.Models
 {
-    public class RequestBlockApiModel: AbstractRequestApiModel
+    public class RequestBlocksModel: AbstractRequestApiModel
     {
         public UInt64 BeginSequence { get; set; }
 

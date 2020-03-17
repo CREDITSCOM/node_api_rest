@@ -4,16 +4,6 @@ using System.Text;
 
 namespace CS.Service.RestApiNode.Models
 {
-    public class ResponseBlocksApiModel
-    {
-        public bool Success { get; set; }
-
-        public string Message { get; set; }
-
-        public string MessageError { get; set; }
-
-    }
-
     public partial class ResponseApiModel
     {
         public ResponseApiModel()
