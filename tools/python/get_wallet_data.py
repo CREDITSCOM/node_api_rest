@@ -16,17 +16,17 @@ data = {
     "authKey": "87cbdd85-b2e0-4cb9-aebf-1fe87bf3afdd"
     #, "MethodApi" : "GetWalletData222"
     , "PublicKey":"5B3YXqDTcWQFGAqEJQJP3Bg1ZK8FFtHtgCiFLT5VAxpe"
-    , "NetworkAlias":"MainNet"
+    #, "NetworkAlias":"MainNet"
     #, "networkIp":"195.133.73.36"	# vh4 mainnet
-    #, "networkIp":"165.22.242.197"	# do-lon4 testnet
-    #, "networkPort":"9070"
+    , "networkIp":"165.22.242.197"	# do-lon4 testnet
+    , "networkPort":"9070"
 	, "ConsensusInfo":False
 	, "Transactions":True
 	, "ContractsApproval":False
 	, "Signatures":False
 	, "Hashes":False
-	, "BeginSequence":30426200
-	, "EndSequence":30426160
+	, "BeginSequence":239
+	, "EndSequence":239
     }
 
 answer = requests.post(url, data=json.dumps(data), headers=headers)
