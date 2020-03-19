@@ -233,13 +233,13 @@ namespace CS.WebApi.Areas.Api.Controllers
 
         [AuthKeyFilter]
         [HttpPost("GetBlocks")]
-        public ActionResult<ResponseBlocksModel> GetBlocks(RequestBlocksModel model)
+        public ActionResult<ResponseBlocksModel> GetBlocks(RequestBlocksModel request)
         {
-            InitAuthKey(model);
+            InitAuthKey(request);
             string json;
             try
             {
-                json = ServiceProvider.GetService<BlocksService>().GetBlocksRange(model);
+                json = ServiceProvider.GetService<BlocksService>().GetBlocksRange(request);
             }
             catch (Exception ex)
             {
@@ -252,5 +252,17 @@ namespace CS.WebApi.Areas.Api.Controllers
             return new JsonResult(json); //(res.Blocks); ;
         }
 
+        [AuthKeyFilter]
+        [HttpPost("GetNodeInfo")]
+        public ActionResult<ResponseNodeInfoModel> GetNodeInfo(RequestNodeInfoModel request)
+        {
+            InitAuthKey(request);
+            ResponseNodeInfoModel result = new ResponseNodeInfoModel()
+            {
+                Success = false,
+                Message = "Not supported yet"
+            };
+            return Ok(result);
+        }
     }
 }

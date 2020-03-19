@@ -4,7 +4,15 @@ using System.Text;
 
 namespace CS.Service.RestApiNode.Models
 {
-    public partial class ResponseApiModel
+
+    public class AbstractResponseApiModel
+    {
+        public bool Success { get; set; }
+
+        public string Message { get; set; }
+    }
+
+    public partial class ResponseApiModel :AbstractResponseApiModel
     {
         public ResponseApiModel()
         {
@@ -13,11 +21,6 @@ namespace CS.Service.RestApiNode.Models
         }
 
         public long? TransactionInnerId { get; set; }
-
-
-        public bool Success { get; set; }
-
-        public string Message { get; set; }
 
         public string MessageError { get; set; }
 
@@ -40,7 +43,7 @@ namespace CS.Service.RestApiNode.Models
     }
 
 
-    public partial class WalletDataResponseApiModel
+    public partial class WalletDataResponseApiModel : AbstractResponseApiModel
     {
         public WalletDataResponseApiModel()
         {
@@ -51,8 +54,6 @@ namespace CS.Service.RestApiNode.Models
         public long LastTransaction { get; set; }
 
         public DelegatedStructure Delegated { get; set; }
-
-        public bool Success { get; set; }
 
         public string MessageError { get; set; }
     }
