@@ -9,11 +9,11 @@ namespace CS.Service.RestApiNode
 {
     public class BlocksService
     {
-        public IConfiguration Configuration { get; }
+        ParseRequestService Parser { get; }
 
-        public BlocksService(IConfiguration configuration)
+        public BlocksService(ParseRequestService provider)
         {
-            Configuration = configuration;
+            Parser = provider;
             instance = new NodeAPIClient.Services.GetBlockService();
         }
 
@@ -23,58 +23,26 @@ namespace CS.Service.RestApiNode
         ///
         /// <remarks>   Aae, 17.03.2020. </remarks>
         ///
-        /// <param name="model">    The request model. </param>
+        /// <param name="request">    The request model. </param>
         ///
         /// <returns>   The blocks range serialized into JSON string. </returns>
 
-        public string GetBlocksRange(RequestBlocksModel model)
+        public string GetBlocksRange(RequestBlocksModel request)
         {
-            string config_addr = "";
-            string config_port = "";
-            string config_timeout = "";
+            instance.RemoteNodeIp = Parser.GetNetworkIp(request);
+            instance.RemoteNodePort = Parser.GetExecutorPort(request);
+            instance.RequestTimeout = Parser.GetRequestTimeout(request);
 
-            string network = model.NetworkAlias;
-            if (!string.IsNullOrWhiteSpace(network))
-            {
-                int srvnum = 1;
-                string config_path = $"ApiNode:servers:{network}:s{srvnum}:";
-                config_addr = Configuration[config_path + "Ip"];
-                config_port = Configuration[config_path + "ExecutorPort"];
-                config_timeout = Configuration[config_path + "TimeOut"];
-            }
-            else
-            {
-                config_addr = model.NetworkIp;
-                config_port = model.NetworkPort;
-                if (string.IsNullOrWhiteSpace(config_addr))
-                {
-                    config_addr = "127.0.0.1";
-                }
-            }
-            ushort port;
-            int timeout;
-            if(!ushort.TryParse(config_port, out port))
-            {
-                port = 9070;
-            }
-            if(!int.TryParse(config_timeout, out timeout))
-            {
-                timeout = 60000;
-            }
-            instance.RemoteNodeIp = config_addr;
-            instance.RemoteNodePort = port;
-            instance.RequestTimeout = timeout;
-
-            var blocks = instance.GetBlocksRange(model.BeginSequence, model.EndSequence);
+            var blocks = instance.GetBlocksRange(request.BeginSequence, request.EndSequence);
          
             ResponseBlocksModel result = new ResponseBlocksModel();
             result.Success = true;
             GetBlockService.BlockContent content = new GetBlockService.BlockContent();
-            content.ConsensusInfo = model.ConsensusInfo;
-            content.Transactions = model.Transactions;
-            content.ContractsApproval = model.ContractsApproval;
-            content.Signatures = model.Signatures;
-            content.Hashes = model.Hashes;
+            content.ConsensusInfo = request.ConsensusInfo;
+            content.Transactions = request.Transactions;
+            content.ContractsApproval = request.ContractsApproval;
+            content.Signatures = request.Signatures;
+            content.Hashes = request.Hashes;
             return GetBlockService.ToJson(blocks, content, false);
         }
     }

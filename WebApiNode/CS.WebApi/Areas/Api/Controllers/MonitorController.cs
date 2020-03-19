@@ -257,34 +257,33 @@ namespace CS.WebApi.Areas.Api.Controllers
         public ActionResult<ResponseNodeInfoModel> GetNodeInfo(RequestNodeInfoModel request)
         {
             InitAuthKey(request);
-            if (!string.IsNullOrWhiteSpace(request.Ip))
+            var config = ServiceProvider.GetService<ParseRequestService>();
+            if(config != null)
             {
-                ushort port = 0;
-                if(!ushort.TryParse(request.Port, out port))
+                var svc = ServiceProvider.GetService<NodeAPIClient.Services.NodeInfoService>();
+                if (svc != null)
                 {
-                    port = RequestNodeInfoModel.DefaultPort;
-                }
-                try
-                {
-                    // fixed timeout, ignore config settings for specific network
-                    var result = ServiceProvider.GetService<NodeAPIClient.Services.NodeInfoService>().GetNodeInfo(request.Ip, port, 60000);
-                    if(result != null)
+                    try
                     {
-                        return Ok(result);
+                        var result = svc.GetNodeInfo(config.GetNetworkIp(request), config.GetDiagnosticPort(request), config.GetRequestTimeout(request));
+                        if (result != null)
+                        {
+                            return Ok(result);
+                        }
+                        return Ok(new ResponseNodeInfoModel()
+                        {
+                            Success = false,
+                            Message = "failed to get requested info, check the remote node is alive"
+                        });
                     }
-                    return Ok(new ResponseNodeInfoModel()
+                    catch (Exception x)
                     {
-                        Success = false,
-                        Message = "failed to get requested info, check the remote node is alive"
-                    });
-                }
-                catch(Exception x)
-                {
-                    return Ok(new ResponseNodeInfoModel()
-                    {
-                        Success = false,
-                        Message = x.Message
-                    });
+                        return Ok(new ResponseNodeInfoModel()
+                        {
+                            Success = false,
+                            Message = x.Message
+                        });
+                    }
                 }
             }
             return Ok(new ResponseNodeInfoModel()
