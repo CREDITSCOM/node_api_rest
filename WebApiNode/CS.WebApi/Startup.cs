@@ -32,6 +32,7 @@ namespace CS.WebApi
             services.AddSingleton(opt => new TransactionService(Configuration));
             services.AddSingleton(opt => new MonitorService(Configuration));
             services.AddSingleton(opt => new BlocksService(Configuration));
+            services.AddSingleton(instance => new NodeAPIClient.Services.NodeInfoService());
             services.AddOpenApiDocument();
         }
 

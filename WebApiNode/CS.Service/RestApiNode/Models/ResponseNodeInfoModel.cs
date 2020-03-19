@@ -6,5 +6,6 @@ namespace CS.Service.RestApiNode.Models
 {
     public class ResponseNodeInfoModel : AbstractResponseApiModel
     {
+        NodeAPIClient.Models.NodeInfo Info { get; set; }
     }
 }

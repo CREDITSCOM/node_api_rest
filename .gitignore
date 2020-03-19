@@ -39,3 +39,4 @@ msbuild.wrn
 # BackUps
 [Bb]ack[Uu]p/
 sample.json
+node_info.json

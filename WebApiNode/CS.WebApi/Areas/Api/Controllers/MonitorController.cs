@@ -257,12 +257,41 @@ namespace CS.WebApi.Areas.Api.Controllers
         public ActionResult<ResponseNodeInfoModel> GetNodeInfo(RequestNodeInfoModel request)
         {
             InitAuthKey(request);
-            ResponseNodeInfoModel result = new ResponseNodeInfoModel()
+            if (!string.IsNullOrWhiteSpace(request.Ip))
+            {
+                ushort port = 0;
+                if(!ushort.TryParse(request.Port, out port))
+                {
+                    port = RequestNodeInfoModel.DefaultPort;
+                }
+                try
+                {
+                    // fixed timeout, ignore config settings for specific network
+                    var result = ServiceProvider.GetService<NodeAPIClient.Services.NodeInfoService>().GetNodeInfo(request.Ip, port, 60000);
+                    if(result != null)
+                    {
+                        return Ok(result);
+                    }
+                    return Ok(new ResponseNodeInfoModel()
+                    {
+                        Success = false,
+                        Message = "failed to get requested info, check the remote node is alive"
+                    });
+                }
+                catch(Exception x)
+                {
+                    return Ok(new ResponseNodeInfoModel()
+                    {
+                        Success = false,
+                        Message = x.Message
+                    });
+                }
+            }
+            return Ok(new ResponseNodeInfoModel()
             {
                 Success = false,
-                Message = "Not supported yet"
-            };
-            return Ok(result);
+                Message = "Ip parameter not set correctly in request"
+            });
         }
     }
 }
