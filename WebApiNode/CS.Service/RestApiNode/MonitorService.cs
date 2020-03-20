@@ -27,8 +27,20 @@ namespace CS.Service.RestApiNode
 
                 var balanceCS = client.WalletBalanceGet(publicKeyByte.ToArray());
                 var amount = BCTransactionTools.GetDecimalByAmount(balanceCS.Balance);
-                var delOut = BCTransactionTools.GetDecimalByAmount(balanceCS.Delegated.Outgoing);
-                var delIn = BCTransactionTools.GetDecimalByAmount(balanceCS.Delegated.Incoming);
+                decimal delOut = 0;
+                decimal delIn = 0;
+                if (balanceCS.Delegated != null)
+                {
+                    if (balanceCS.Delegated.Outgoing != null)
+                    {
+                        delOut = BCTransactionTools.GetDecimalByAmount(balanceCS.Delegated.Outgoing);
+                    }
+                    if (balanceCS.Delegated.Outgoing != null)
+                    {
+                        delIn = BCTransactionTools.GetDecimalByAmount(balanceCS.Delegated.Incoming);
+                    }
+                }
+
                 response.ListItem.Add(
                     new ItemListApiModel()
                     {
