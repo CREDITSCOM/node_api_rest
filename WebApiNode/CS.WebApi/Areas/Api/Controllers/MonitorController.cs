@@ -243,14 +243,22 @@ namespace CS.WebApi.Areas.Api.Controllers
             }
             catch (Exception ex)
             {
-                var res = new ResponseBlocksModel();
-                res.Success = false;
-                res.Message = ex.Message;
-                return Ok(res);
+                return StatusCode(InternalServerError, new ResponseBlocksModel()
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
             }
 
-            return new JsonResult(json); //(res.Blocks); ;
+            return new ContentResult()
+            {
+                Content = json,
+                ContentType = "application/json",
+                StatusCode = 200
+            };
         }
+
+        const int InternalServerError = 500;
 
         [AuthKeyFilter]
         [HttpPost("GetNodeInfo")]
@@ -270,15 +278,15 @@ namespace CS.WebApi.Areas.Api.Controllers
                         {
                             return Ok(result);
                         }
-                        return Ok(new ResponseNodeInfoModel()
+                        return BadRequest(new ResponseNodeInfoModel()
                         {
                             Success = false,
-                            Message = "failed to get requested info, check the remote node is alive"
+                            Message = "failed to get requested info, check the node is alive"
                         });
                     }
                     catch (Exception x)
                     {
-                        return Ok(new ResponseNodeInfoModel()
+                        return StatusCode(InternalServerError, new ResponseNodeInfoModel()
                         {
                             Success = false,
                             Message = x.Message
@@ -286,10 +294,10 @@ namespace CS.WebApi.Areas.Api.Controllers
                     }
                 }
             }
-            return Ok(new ResponseNodeInfoModel()
+            return StatusCode(InternalServerError, new ResponseNodeInfoModel()
             {
                 Success = false,
-                Message = "Ip parameter not set correctly in request"
+                Message = "Server is not properly configured"
             });
         }
     }
