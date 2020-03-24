@@ -244,7 +244,7 @@ namespace CS.Service.RestApiNode
                 if (result.Status.Code > 0)
                 {
                     response.Success = false;
-                    response.MessageError = result.Status.Message;
+                    response.Message = result.Status.Message;
                 }
                 else
                 {
@@ -253,9 +253,6 @@ namespace CS.Service.RestApiNode
                     if (result.Id != null)
                         response.TransactionId = $"{result.Id.PoolSeq}.{result.Id.Index + 1}";
                 }
-
-                response.Success = true;
-                response.TransactionInnerId = transac.Id;
             }
 
             return response;
