@@ -1,0 +1,323 @@
+FORMAT: 1A
+HOST: http://apinode.credits.com/api
+
+# The Credits Node API
+
+The Credits Node API позволяет программно взаимодейстовать с узлами как в CreditsNet, и в TestNet.
+
+# Group Monitor
+
+Группа запросов для получения общей и детальной информации о данных в блокчейне и узлах сетей Credits.
+
+## Blockchain content [/Monitor/GetBlocks]
+
+### List content of range of blocks [GET]
+
+Получить блоки из блокчейна.
+Предназначен для получения различной информации о блоках общим списком за один запрос. Для сокращения объема передаваемых данных можно задавать в запросе, какая информация интересует клиента.
+Требуемый состав информации зависит от сценария использования данных в ответе, например:
+- Анализ операций, актуализация балансов кошельков и т.д.требует **Transactions**, который позволяет получить все операции, включая
+    - сумму
+    - отправителя / получателя (вызывающего / контракт для транзакций смарт-контрактов)
+    - комиссию и ее ограничение
+    - пользовательские данные
+    - подпись
+- Анализ эффективности участия узлов в консенсусе требует **ConsensusInfo**, который позволяет получить
+    - список доверенных, участвовавших в сборке блока
+    - подписи успешно отработавших доверенных
+    - отсутствие подписи как признак неуспешных доверенных
+    - список доверенных прошлого раунда, выбравших данных доверенных
+    - их подписи таблицы раунда
+- Анализ участия узлов в консенсусе по вызовам контрактов требует  **ContractsApproval**, который позволяет получить при наличии в данном блоке результатов вызовов контрактов (т.н. транзакции нового состояния) по каждому из контрактов
+    - идентификатор контракта
+    - номер блока, в котором находится соответствующий результату вызов
+    - список доверенных, проводивших консенсус по результату вызова контракта
+    - их подписи пакета с новым состоянием контракта
+- Проверка подписей требует значений подписей, иначе установкой Signatures в False можно отключить передачу значений подписей (128 символов), вместо этого передавая признаки “подпись есть” - пустую строку “” или “подписи нет” - null значение
+- Проверка связности и целостности цепочки блоков хэшами требует их значений, иначе установка Hashes в False позволяет отключить передачу хэшей (64 символа), вместо этого передавая признаки “хэш есть” - пустую строку “” или “хэша нет” - null значение
+
++ Request to network by name (application/json)
+    
+        {
+            "authKey": "GUID_STRING",
+            "networkAlias":"NETWORK_NAME",
+            
+            "ConsensusInfo": BOOL, // запрос информации о консенсусе (default is false)
+            "Transactions": BOOL,  // запрос информации о транзакциях (default is false)
+            "ContractsApproval": BOOL, // запрос информации о консенсусе по контрактам (default is false)
+            "Signatures": BOOL, // включать значения подписей (default is false)
+            "Hashes": BOOL, // включать значения хэшей (default is false)
+            "ExtraTransactionDetails": BOOL // Включать дополнительную информацию по транзакциям, эта информация может быть выведена на клиенте из данных ответа (default is false)
+        }
+
++ Request to specific node (application/json)
+
+        {
+            "authKey": "GUID_STRING",
+            "networkIp":"IP_STRING",
+            "networkPort":"PORT_STRING",
+
+            "ConsensusInfo": BOOL, // запрос информации о консенсусе (default is false)
+            "Transactions": BOOL,  // запрос информации о транзакциях (default is false)
+            "ContractsApproval": BOOL, // запрос информации о консенсусе по контрактам (default is false)
+            "Signatures": BOOL, // включать значения подписей (default is false)
+            "Hashes": BOOL, // включать значения хэшей (default is false)
+            "ExtraTransactionDetails": BOOL // Включать дополнительную информацию по транзакциям, эта информация может быть выведена на клиенте из данных ответа (default is false)
+        }
+
++ Response 200 (application/json)
+
+        [
+            {
+                "Version": 0, // версия формата бинарной упаковки блока в байты для хранения
+                "PreviousHash": "HEX_STRING", // хэш предыдущего блока (требует Hashes: true)
+                "Hash": "HEX_STRING", // хэш данного блока (требует Hashes: true)
+                "Sequence": U64, // порядковый номер блока
+                "Timestamp": U64, // метка времени блока, Unix time, но в миллисекундах (требует ExtraTransactionDetails: false)
+                "UserFields": // пользовательские данные (список)
+                [
+                    // элемент списка, идентификатор + одно из трех значений
+                    {
+                        "Key": U8, // идентификатор элемента
+                        "Integer": U64, // целочисленное значение u64_value, если задано
+                        "Bytes": "HEX_STRING", // значения байтов, если элемент содержит массив байтов
+                        "Money": "DECIMAL_STRING" // значение суммы decimal_value, если задано
+                    },
+                    ...
+                ],
+                "RoundCost": "DECIMAL_STRING", // суммарная сумма комиссия за транзакции в блоке
+                "Transactions": // список транзакций
+                [
+                    // транзакция (требует Transactions: true)
+                    {
+                        "Type": U8, // тип транзакции, значения: 1 - перевод, 2 - делегирование, 3 - контракт, 4 - служебная, 0 - остальные
+                        "Source": "BASE58_STRING", // отправитель или вызвавший контракт
+                        "Target": "BASE58_STRING", // получатель или вызываемый контракт
+                        "Sum": "DECIMAL_STRING", // сумма
+                        "MaxFee": "HEX_STRING", // ограничение комиссии
+                        "UserFields": // пользовательские данные (список)
+                        [
+                            ... // элементы такие же, как и для блока
+                        ],
+                        "Signature":"HEX_STRING", // подпись транзакции отправителем (требует Signatures: true)
+                        "ActualFee": "HEX_STRING", // фактическая комиссия
+                        "Id": "U64.U16", // идентификатор (требует ExtraTransactionDetails: true)
+                        "Timestamp": U64, // метка времени блока, Unix time, но в миллисекундах (требует ExtraTransactionDetails: true)
+                        "Currency": "TEXT" // валюта (требует ExtraTransactionDetails: true)
+                    },
+                    ...
+                ],
+                "IntroducedWallets": // регистрация новых аккаунтов с присвоением идентификатора
+                [
+                    // элемент списка новых аккаунтов
+                    {
+                        "Key": "BASE58_STRING", // публичный ключ
+                        "Id": U32 // численный идентификатор, синоним данного аккаунта
+                    },
+                    ...
+                ],
+                "TrustedNodes": // состав консенсуса, утвердившего блок
+                [
+                    // информация по каждому участнику (требует ConsensusInfo: true)
+                    {
+                        "Id": "BASE58_STRING", // идентификатор
+                        "Signature": "HEX_STRING" // подпись блока или null, если участник провалил участие (требует Signatures: true)
+                    },
+                    ...
+                ],
+                "TrustedApproval": // утверждение консенсуса, собиравшего блок, предыдущим консенсусом
+                [
+                    // элемент утверждения (требует ConsensusInfo: true)
+                    {
+                        "Key": U8, // индекс в списке участников предыдущего консенсуса
+                        "Value": "HEX_STRING" // подпись таблицы раунда для данного блока (требует Signatures: true)
+                    },
+                    ...
+                ],
+                "ContractsApproval": // подтверждения контрактов (список)
+                [
+                    // подтверждаемый результат конкретного контракта (требует ContractsApproval: true)
+                    {
+                        "Key": "BASE58_STRING", // идентификатор контракта
+                        "CallSequence": U64, // номер блока, хранящего список доверенных
+                        "Signatures": // подписи участников консенсуса по данному вызову
+                        [
+                            // конкретный участник консенсуса
+                            {
+                                "Key": U8, // индекс в списке доверенных
+                                "Value": "HEX_STRING" // подпись пакет с результатом (требует Signatures: true)
+                            },
+                            ...
+                        ]
+                    },
+                    ...
+                ]
+            },
+            ...
+        ]
+
+## Node info [/Monitor/GetNodeInfo]
+
+### Get remote node state [GET]
+
+Получить статистическую информацию о выбранном узле сети. Необходимо учитывать, что владелец любого узла имеет возможность ***заблокировать выдачу узлом информации по данному запросу***
+
++ Request (application/json)
+
+        {
+            "authKey": "GUID_STRING",
+            "networkIp":"IP_STRING",
+            "networkPort":"PORT_STRING",
+        }
+
++ Response 200 (application/json)
+
+        [
+            {
+                "Id": "BASE58_STRING", // идентификатор узла (публичный ключ аккаунта узла)
+                "Platform": U8, // платформа ОС: 0 - Linux, 1 - Mac OS, 2 - Windows, 3 - Android, ост. - Unknown
+                "Version": "TEXT", // версия сборки ПО
+                "TopBlock": U64, // номер блока на вершине блокчейна
+                "StartRound": U64, // раунд в сети при запуске узла
+                "CurrentRound": U64, // текущий раунд в сети
+                "AveRoundMs": U64, // средняя длительность раунда в мсек, рассчитанная на период между начальным и текущим раундами
+                "UptimeMs": U64, // время работы узла после запуска, мсек
+                "GrayList": // состав серого списка (список)
+                [
+                    "BASE58_STRING", // идентификатор узла в сером списке
+                    ...
+                ],
+                "BlackList": // состав черного списка (список)
+                [
+                    "BASE58_STRING", // идентификатор узла в черном списке
+                    ...
+                ]
+            }
+        ]
+
+    
+## Individual Card [/card]
+
+### Get single card [GET]
+
+View information on a particular card that has been ordered
+
++ Request
+
+    + Headers
+            
+            Authorization: Bearer TOKEN-VALUE-GOES-HERE
+            
+    + Body 
+    
+            {
+                "card_id": "9ae2sd99-3f29-4a73-9d71-fddb5ef61e2e"
+            }
+
++ Response 200 (application/json)
+
+        {
+            "last_four": "1234",
+            "email": "fandi@example.com",
+            "state": "ACTIVE",
+            "expiration": "0923",
+            "card_id": "9ae299-3f29-4a73-9d71-fddb5ef61e2e", 
+            "created_at": "2019-09-17 16:05:18
+            "balance": 2048 //dollars
+        }
+        
+## Batch Funding [/cards/batch]
+
+### Add funds to multiple cards [PUT]
+
+Use this endpoint to fund multiple cards with the same amount. This will be much more performant than looping over the **PUT /cards** endpoint.
+
++ Request (application/json)
+
+    + Headers
+            
+            Authorization: Bearer TOKEN-VALUE-GOES-HERE
+    
+    + Body
+    
+            {
+                "card_ids": ["9ien7182-8292-4bff-b6ed-541f6f377208", "j829d01j-1485-4757-bf9a-e40c4534369f"],
+                "addBalance": 200
+            }
+
++ Response 200 (application/json)
+        
+        {
+            "data": [
+                {
+                    "last_four": "5237",
+                    "email": "testfeb28@yopmail.com",
+                    "state": "ACTIVE",
+                    "expiration": "0923",
+                    "created_at": "2019-09-25T22:54:52.000Z",
+                    "card_id": "9ien7182-8292-4bff-b6ed-541f6f377208",
+                    "balance": 59090
+                },
+                {
+                    "last_four": "7799",
+                    "email": "testapi2@yopmail.com",
+                    "state": "ACTIVE",
+                    "expiration": "0124",
+                    "created_at": "2020-01-22T16:45:01.000Z",
+                    "card_id": "j829d01j-1485-4757-bf9a-e40c4534369f",
+                    "balance": 53420
+                }
+            ]
+        }
+        
+        
+        
+## Transfer [/transfer]
+
+
+## Tokens [/transaction-token]
+
+### Transaction token [GET]
+
+Generate a transaction token
+
++ Request
+
+    + Headers
+            
+            Authorization: Bearer TOKEN-VALUE-GOES-HERE
+    
+
++ Response 200 (application/json)
+
+        {
+            "transactionToken": "123e4567-e89b-12d3-a456-426655440000"
+        }
+
+### Transfer funds [POST]
+
+Transfer funds between cards. To transfer funds you will first need to generate a transaction token. This token should be passed in the body of your transfer funds request. Note: Each token is unique and valid for only 1 transaction. 
+
++ Request (application/json)
+
+    + Headers
+            
+            Authorization: Bearer TOKEN-VALUE-GOES-HERE
+    
+    + Body
+
+            {
+                "fromCardID": "3cdf1321-68cd-475b-b73c-55fb3606753c",
+                "toCardID": "41f1a442-6d4d-4b52-b35a-c632691b205c",
+                "amount": 2500, //cents
+                "transactionToken": "123e4567-e89b-12d3-a456-426655440000"
+            }
+
++ Response 200 (application/json)
+
+        {
+            "balance": {
+                "3cdf1321-68cd-475b-b73c-55fb3606753c": 132, //dollars
+                "41f1a442-6d4d-4b52-b35a-c632691b205c": 203
+            }
+        }

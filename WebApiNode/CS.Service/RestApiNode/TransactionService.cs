@@ -253,9 +253,6 @@ namespace CS.Service.RestApiNode
                     if (result.Id != null)
                         response.TransactionId = $"{result.Id.PoolSeq}.{result.Id.Index + 1}";
                 }
-
-                response.Success = true;
-                response.TransactionInnerId = transac.Id;
             }
 
             return response;
