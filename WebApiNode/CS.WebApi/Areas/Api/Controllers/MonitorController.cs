@@ -132,7 +132,7 @@ namespace CS.WebApi.Areas.Api.Controllers
         public ActionResult<ResponseApiModel> GetTransactionInfo(RequestGetterApiModel model)
         {
             InitAuthKey(model);
-            ResponseApiModel res;
+            TransactionInfo res;
             try
             {
                 res = ServiceProvider.GetService<MonitorService>().GetTransaction(model);
@@ -141,7 +141,7 @@ namespace CS.WebApi.Areas.Api.Controllers
             }
             catch (Exception ex)
             {
-                res = new ResponseApiModel();
+                res = new TransactionInfo();
                 res.Success = false;
                 res.Message = ex.Message;
             }
@@ -173,21 +173,21 @@ namespace CS.WebApi.Areas.Api.Controllers
 
         [AuthKeyFilter]
         [HttpPost("GetContractFromTransaction")]
-        public ActionResult<ResponseApiModel> GetContractFromTransaction(RequestGetterApiModel model)
+        public ActionResult<TransactionInfo> GetContractFromTransaction(RequestGetterApiModel model)
         {
             InitAuthKey(model);
             SmartSourceCode ret;
-            ResponseApiModel res;
+            TransactionInfo res;
             try
             {
                 ret = new SmartSourceCode();
                 res = ServiceProvider.GetService<MonitorService>().GetTransaction(model);
-                if (res.TransactionInfo.Bundle!=null && res.TransactionInfo.Bundle.Contract.Deploy != null)
+                if (res.Bundle!=null && res.Bundle.Contract.Deploy != null)
                 {
 
                 }
-                ret.sourceString = res.TransactionInfo.Bundle.Contract.Deploy.SourceCode;
-                ret.gZipped = Utils.Compress(res.TransactionInfo.Bundle.Contract.Deploy.SourceCode);
+                ret.sourceString = res.Bundle.Contract.Deploy.SourceCode;
+                ret.gZipped = Utils.Compress(res.Bundle.Contract.Deploy.SourceCode);
                 ret.Success = true;
             }
             catch (Exception ex)

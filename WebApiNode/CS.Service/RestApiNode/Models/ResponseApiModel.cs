@@ -148,7 +148,7 @@ namespace CS.Service.RestApiNode.Models
     }
 
 
-    public class TransactionInfo
+    public class TransactionInfo : AbstractResponseApiModel
     {
         public string Id { get; set; }
         public string FromAccount { get; set; }

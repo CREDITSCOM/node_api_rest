@@ -51,10 +51,10 @@ namespace CS.WebPublic.Areas.Api.Controllers
             return Ok(res);
         }
 
-        [HttpPost("GetTransaction")]
-        public ActionResult<ResponseApiModel> GetTransaction(RequestGetterApiModel model)
+        [HttpPost("GetTransactionInfo")]
+        public ActionResult<TransactionInfo> GetTransaction(RequestGetterApiModel model)
         {
-            ResponseApiModel res;
+            TransactionInfo res;
             try
             {
                 res = ServiceProvider.GetService<MonitorService>().GetTransaction(model);
@@ -62,7 +62,7 @@ namespace CS.WebPublic.Areas.Api.Controllers
             }
             catch (Exception ex)
             {
-                res = new ResponseApiModel();
+                res = new TransactionInfo();
                 res.Success = false;
                 res.Message = ex.Message;
             }

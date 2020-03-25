@@ -84,7 +84,7 @@ namespace CS.Test.Unit.Api
             model.NetworkAlias = /*"MainNet";*/"TestNet";
             //model.AuthKey = "87cbdd85-b2e0-4cb9-aebf-1fe87bf3afdd";
             var response = service.GetBalance(model);
-            if (response.ListItem.Count > 1) Debug.WriteLine(response.ListItem.ToList()[0].Amount);
+            if (response.Tokens.Count > 1) Debug.WriteLine(response.Tokens.ToList()[0].Amount);
             Assert.IsNotNull(response);
             Debug.WriteLine(JsonConvert.SerializeObject(response));
         }

@@ -285,15 +285,15 @@ namespace CS.Service.RestApiNode
         {
             byte[] byteArray = Encoding.UTF8.GetBytes(stringIn);
 
-            MemoryStream stream = new MemoryStream(byteArray);
+            MemoryStream stream = new MemoryStream();
             System.IO.Compression.GZipStream sw = new System.IO.Compression.GZipStream(stream, System.IO.Compression.CompressionMode.Compress);
 
             sw.Write(byteArray, 0, byteArray.Length);
             sw.Close();
 
-            byteArray = stream.ToArray();
+            byte[] result = stream.ToArray();
             System.Text.StringBuilder sB = new System.Text.StringBuilder(byteArray.Length);
-            foreach (byte item in byteArray)
+            foreach (byte item in result)
             {
                 sB.Append((char)item);
             }

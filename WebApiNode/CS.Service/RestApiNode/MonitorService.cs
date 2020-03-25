@@ -72,9 +72,9 @@ namespace CS.Service.RestApiNode
             return response;
         }
 
-        public ResponseApiModel GetTransaction(RequestTransactionApiModel model)
+        public TransactionInfo GetTransaction(RequestTransactionApiModel model)
         {
-            var response = new ResponseApiModel();
+            var response = new TransactionInfo();
 
             using (var client = GetClientByModel(model))
             {
@@ -82,7 +82,7 @@ namespace CS.Service.RestApiNode
                 var tr = client.TransactionGet(trId);
                 var tInfo = ToTransactionInfo(0, trId, tr.Transaction.Trxn);
                 tInfo.Found = tr.Found;
-                response.TransactionInfo = tInfo;
+                response = tInfo;
             }
 
             return response;
