@@ -56,7 +56,7 @@ namespace CS.Test.Unit.Api
         public void GetContractTest()
         {
             var service = new MonitorService(Configuration);
-            var model = new RequestGetterApiModel();
+            var model = new RequestKeyApiModel();
             
             model.PublicKey = "12GfsQD7peXrxTsjyNVCJmpWWBJAYA9oKy9dGZHb5mJt";
             model.NetworkIp = "68.183.230.109";

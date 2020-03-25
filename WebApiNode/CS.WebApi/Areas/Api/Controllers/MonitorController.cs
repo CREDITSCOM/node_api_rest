@@ -84,7 +84,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
         [AuthKeyFilter]
         [HttpPost("GetWalletInfo")]
-        public ActionResult<ResponseApiModel> GetWalletInfo(RequestApiModel model)
+        public ActionResult<ResponseApiModel> GetWalletInfo(RequestKeyApiModel model)
         {
             InitAuthKey(model);
             WalletDataResponseApiModel res;
@@ -107,7 +107,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
         [AuthKeyFilter]
         [HttpPost("GetContract")]
-        public ActionResult<ResponseApiModel> GetContract(RequestGetterApiModel model)
+        public ActionResult<ResponseApiModel> GetContract(RequestKeyApiModel model)
         {
             InitAuthKey(model);
             ResponseApiModel res;
@@ -151,7 +151,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
         [AuthKeyFilter]
         [HttpPost("GetWalletTransactions")]
-        public ActionResult<ResponseApiModel> GetWalletTransactions(AbstractRequestApiModel model)
+        public ActionResult<ResponseApiModel> GetWalletTransactions(RequestKeyApiModel model)
         {
             InitAuthKey(model);
             ResponseApiModel res;
@@ -203,7 +203,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
         [AuthKeyFilter]
         [HttpPost("GetContractByAddress")]
-        public ActionResult<ResponseApiModel> GetContractByAddress(RequestApiModel model)
+        public ActionResult<ResponseApiModel> GetContractByAddress(RequestKeyApiModel model)
         {
             InitAuthKey(model);
 
@@ -230,7 +230,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
         [AuthKeyFilter]
         [HttpPost("ContractValidation")]
-        public ActionResult<ContractValidationResponse> ContractValidation(ContractValidationRequestModel model)
+        public ActionResult<ContractValidationResponse> ContractValidation(RequestContractValidationModel model)
         {
             InitAuthKey(model);
 

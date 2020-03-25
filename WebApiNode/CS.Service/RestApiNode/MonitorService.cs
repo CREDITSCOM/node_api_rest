@@ -88,7 +88,7 @@ namespace CS.Service.RestApiNode
             return response;
         }
 
-        public SmartSourceCode GetContractByAddress(AbstractRequestApiModel model)
+        public SmartSourceCode GetContractByAddress(RequestKeyApiModel model)
         {
             var response = new SmartSourceCode();
 
@@ -105,7 +105,7 @@ namespace CS.Service.RestApiNode
             return response;
         }
 
-        public ContractValidationResponse ValidateContract(ContractValidationRequestModel model)
+        public ContractValidationResponse ValidateContract(RequestContractValidationModel model)
         {
             var response = new ContractValidationResponse();
 
@@ -133,7 +133,7 @@ namespace CS.Service.RestApiNode
 
 
 
-        public ResponseApiModel GetWalletTransactions(AbstractRequestApiModel model)
+        public ResponseApiModel GetWalletTransactions(RequestKeyApiModel model)
         {
             var response = new ResponseApiModel();
 
@@ -166,7 +166,7 @@ namespace CS.Service.RestApiNode
         }
 
 
-        public WalletDataResponseApiModel GetWalletData(AbstractRequestApiModel model)
+        public WalletDataResponseApiModel GetWalletData(RequestKeyApiModel model)
         {
             var response = new WalletDataResponseApiModel();
 
@@ -272,7 +272,7 @@ namespace CS.Service.RestApiNode
             return cInfo;
         }
 
-        public ResponseApiModel GetContract(RequestGetterApiModel model)
+        public ResponseApiModel GetContract(RequestKeyApiModel model)
         {
             var response = new ResponseApiModel();
 

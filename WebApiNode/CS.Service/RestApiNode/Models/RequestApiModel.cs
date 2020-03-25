@@ -22,8 +22,7 @@ namespace CS.Service.RestApiNode.Models
 
         //public string NetworkPort { get; set; }
 
-
-        public string MethodApi { get; set; }
+        public string PublicKey { get; set; }
 
       //  public string PublicKey { get; set; }
 
@@ -68,9 +67,24 @@ namespace CS.Service.RestApiNode.Models
         public DateTimeOffset? DateExpired { get; set; }
     }
 
-    public class ContractValidationRequestModel : AbstractRequestApiModel
+    public class RequestContractValidationModel : AbstractRequestApiModel
     {
         public string SourceString { get; set; }
+    }
+
+    public class RequestTransactionApiModel : RequestSourceCodeApiModel
+    {
+        public string TransactionId { get; set; }
+    }
+
+    public class RequestSourceCodeApiModel : AbstractRequestApiModel
+    {
+        public bool CompressString { get; set; }
+    }
+
+    public class RequestKeyApiModel : RequestSourceCodeApiModel
+    {
+        public string PublicKey { get; set; }
     }
 
     public class TokenParamsApiModel

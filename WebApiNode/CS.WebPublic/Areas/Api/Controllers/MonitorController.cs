@@ -33,7 +33,7 @@ namespace CS.WebPublic.Areas.Api.Controllers
         }
 
         [HttpPost("GetContract")]
-        public IActionResult GetContract(RequestGetterApiModel model)
+        public IActionResult GetContract(RequestKeyApiModel model)
         {
             ResponseApiModel res;
             try
