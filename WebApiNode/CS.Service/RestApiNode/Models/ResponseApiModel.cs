@@ -231,6 +231,34 @@ namespace CS.Service.RestApiNode.Models
         public string sourceString { get; set; }
     }
 
+    //std::string sourceCode;
+    //std::vector< ::general::ByteCodeObject> byteCodeObjects;
+    //std::string hashState;
+    //int32_t tokenStandard;
+
+    public class ContractValidationResponse : AbstractResponseApiModel
+    {
+        public ContractDeploy Deploy { get; set; }
+
+        public int TokenStandard { get; set; }
+    }
+    public class ContractDeploy
+    {
+        public ContractDeploy()
+        {
+            ByteCodeObjects = new List<BCObject>();
+        }
+        public string SourceCode { get; set; }
+
+        public ICollection<BCObject> ByteCodeObjects { get; set; }
+    }
+
+    public class BCObject
+    {
+        public string Name { get; set; }
+        public ICollection<byte> ByteCode { get; set; }
+    }
+
     public class TxProperty
     {
         public string Title;

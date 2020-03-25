@@ -105,6 +105,34 @@ namespace CS.Service.RestApiNode
             return response;
         }
 
+        public ContractValidationResponse ValidateContract(ContractValidationRequestModel model)
+        {
+            var response = new ContractValidationResponse();
+
+            using (var client = GetClientByModel(model))
+            {
+                var result = client.SmartContractCompile(model.SourceString);
+                if(result.ByteCodeObjects != null)
+                {
+                    response.Deploy = new ContractDeploy();
+                }
+                foreach (var a in result.ByteCodeObjects)
+                {
+                    var bc = new BCObject();
+                    bc.Name = a.Name;
+                    bc.ByteCode = a.ByteCode;
+                    
+                    response.Deploy.ByteCodeObjects.Add(bc);
+                }
+                response.Deploy.SourceCode = model.SourceString;
+                response.TokenStandard = result.TokenStandard;
+            }
+
+            return response;
+        }
+
+
+
         public ResponseApiModel GetWalletTransactions(AbstractRequestApiModel model)
         {
             var response = new ResponseApiModel();

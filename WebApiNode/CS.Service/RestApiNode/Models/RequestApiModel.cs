@@ -68,6 +68,11 @@ namespace CS.Service.RestApiNode.Models
         public DateTimeOffset? DateExpired { get; set; }
     }
 
+    public class ContractValidationRequestModel : AbstractRequestApiModel
+    {
+        public string SourceString { get; set; }
+    }
+
     public class TokenParamsApiModel
     {
         public TokenParamsApiModel()

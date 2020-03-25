@@ -83,8 +83,8 @@ namespace CS.WebApi.Areas.Api.Controllers
         }
 
         [AuthKeyFilter]
-        [HttpPost("GetWalletData")]
-        public ActionResult<ResponseApiModel> GetWalletData(RequestApiModel model)
+        [HttpPost("GetWalletInfo")]
+        public ActionResult<ResponseApiModel> GetWalletInfo(RequestApiModel model)
         {
             InitAuthKey(model);
             WalletDataResponseApiModel res;
@@ -221,6 +221,29 @@ namespace CS.WebApi.Areas.Api.Controllers
             catch (Exception ex)
             {
                 res = new SmartSourceCode();
+                res.Success = false;
+                res.Message = ex.Message;
+            }
+
+            return Ok(res);
+        }
+
+        [AuthKeyFilter]
+        [HttpPost("ContractValidation")]
+        public ActionResult<ContractValidationResponse> ContractValidation(ContractValidationRequestModel model)
+        {
+            InitAuthKey(model);
+
+            ContractValidationResponse res;
+            try
+            {
+
+                res = ServiceProvider.GetService<MonitorService>().ValidateContract(model);
+                res.Success = true;
+            }
+            catch (Exception ex)
+            {
+                res = new ContractValidationResponse();
                 res.Success = false;
                 res.Message = ex.Message;
             }
