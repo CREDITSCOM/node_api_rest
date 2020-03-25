@@ -24,4 +24,10 @@ namespace CS.Service.RestApiNode.Models
     {
         public string TransactionId { get; set; }
     }
+
+    public abstract class RequestSourceCodeApiModel : RequestTransactionApiModel
+    {
+        public bool CompressString { get; set; }
+    }
 }
+

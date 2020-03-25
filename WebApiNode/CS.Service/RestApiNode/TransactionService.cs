@@ -244,7 +244,7 @@ namespace CS.Service.RestApiNode
                 if (result.Status.Code > 0)
                 {
                     response.Success = false;
-                    response.MessageError = result.Status.Message;
+                    response.Message = result.Status.Message;
                 }
                 else
                 {

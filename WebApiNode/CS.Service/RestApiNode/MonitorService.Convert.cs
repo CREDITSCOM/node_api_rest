@@ -21,9 +21,37 @@ namespace CS.Service.RestApiNode
                 InnerId = tr.Id,
                 Time = Utils.UnixTimeStampToDateTime(tr.TimeCreation),
                 Status = "Success",
-                //  Signature = Utils.ConvertHash(tr.Signature),
+                Signature = Utils.ConvertHash(tr.Signature),
+                Bundle = (tr.SmartContract != null || tr.SmartInfo != null) ? new Extra
+                {
+                    Contract = (tr.SmartContract != null) ? new SmartContractModel {
+                        ForgetNewState = tr.SmartContract.ForgetNewState,
+                        Execute = (tr.SmartContract.Method != null) ? new SmartContractExecuteModel
+                        {
+                            Method = tr.SmartContract.Method
+                        } : null,
+                        Deploy = (tr.SmartContract.SmartContractDeploy != null) ? new SmartContractDeployModel
+                        {
+                            SourceCode = tr.SmartContract.SmartContractDeploy.SourceCode,
+                            TokenStandard = tr.SmartContract.SmartContractDeploy.TokenStandard,
+                            HashState = tr.SmartContract.SmartContractDeploy.HashState
+                        } : null
+
+                    } : null,
+                    ContractInfo = (tr.SmartInfo != null) ? new SmartInfo {
+                        //SmartDeploy = null,
+                        //SmartExecution = null
+                    } : null
+                } : null
                 // ExtraFee = tr.ExtraFee?.Select(e => new TxFee(FormatAmount(e.Sum), e.Comment)).ToList()
             };
+            if(tr.SmartContract!=null && tr.SmartContract.Params.Count > 0)
+            {
+                foreach (var a in tr.SmartContract.Params) 
+                {
+                    tInfo.Bundle.Contract.Execute.Params.Add(a.ToString());
+                }
+            }
 
 
 

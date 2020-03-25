@@ -17,9 +17,9 @@ namespace CS.Service.RestApiNode
         {
         }
 
-        public ResponseApiModel GetBalance(RequestApiModel model)
+        public BalanceResponseApiModel GetBalance(RequestApiModel model)
         {
-            var response = new ResponseApiModel();
+            var response = new BalanceResponseApiModel();
 
             using (var client = GetClientByModel(model))
             {
@@ -41,19 +41,9 @@ namespace CS.Service.RestApiNode
                     }
                 }
 
-                response.ListItem.Add(
-                    new ItemListApiModel()
-                    {
-                        IsCs = true,
-                        Amount = amount,
-                        AmountAsString = amount.ToString(CultureInfo.InvariantCulture),
-                        DelegatedOut = delOut,
-                        DelegatedOutAsString = delOut.ToString(CultureInfo.InvariantCulture),
-                        DelegatedIn = delIn,
-                        DelegatedInAsStirng = delIn.ToString(CultureInfo.InvariantCulture),
-
-                    }
-                );
+                response.Balance = amount;
+                response.DelegatedOut = delOut;
+                response.DelegatedIn = delIn;
 
                 if (balanceCS.Status.Code > 0)
                     throw new Exception(balanceCS.Status.Message);
@@ -67,15 +57,13 @@ namespace CS.Service.RestApiNode
                     if (String.IsNullOrEmpty(item.Balance))
                         continue;
                      
-                    var item1 = new ItemListApiModel();
+                    var item1 = new Token();
                     item1.Alias = item.Code;
-                    item1.IsCs = false;
                     item1.Amount = Decimal.Parse(item.Balance, CultureInfo.InvariantCulture);
-                    item1.AmountAsString = item1.Amount.ToString(CultureInfo.InvariantCulture);
                     item1.PublicKey = SimpleBase.Base58.Bitcoin.Encode(item.Token);
                     item1.Name = item.Name;
 
-                    response.ListItem.Add(
+                    response.Tokens.Add(
                         item1
                     );
                 }
@@ -95,6 +83,39 @@ namespace CS.Service.RestApiNode
                 var tInfo = ToTransactionInfo(0, trId, tr.Transaction.Trxn);
                 tInfo.Found = tr.Found;
                 response.TransactionInfo = tInfo;
+            }
+
+            return response;
+        }
+
+        public SmartSourceCode GetContractByAddress(AbstractRequestApiModel model)
+        {
+            var response = new SmartSourceCode();
+
+            using (var client = GetClientByModel(model))
+            {
+                var publicKeyByte = SimpleBase.Base58.Bitcoin.Decode(model.PublicKey);
+                var result = client.SmartContractGet(publicKeyByte.ToArray());
+                if(result.SmartContract != null && result.SmartContract.SmartContractDeploy != null)
+                {
+                    response.sourceString = result.SmartContract.SmartContractDeploy.SourceCode;
+                }
+            }
+
+            return response;
+        }
+
+        public ResponseApiModel GetWalletTransactions(AbstractRequestApiModel model)
+        {
+            var response = new ResponseApiModel();
+
+            using (var client = GetClientByModel(model))
+            {
+                var pKey = SimpleBase.Base58.Bitcoin.Decode(model.PublicKey).ToArray();
+                var trxs = client.TransactionsGet(pKey, 0, 10);
+                //var tInfo = ToTransactionInfo(0, trId, tr.Transaction.Trxn);
+                //tInfo.Found = tr.Found;
+                //response.TransactionInfo = trxs;
             }
 
             return response;

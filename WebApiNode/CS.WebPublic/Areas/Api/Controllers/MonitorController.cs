@@ -16,7 +16,7 @@ namespace CS.WebPublic.Areas.Api.Controllers
         [HttpPost("GetBalance")]
         public ActionResult<ResponseApiModel> GetBalance(RequestApiModel model)
         {
-            ResponseApiModel res;
+            BalanceResponseApiModel res;
             try
             {
                 res = ServiceProvider.GetService<MonitorService>().GetBalance(model);
@@ -24,9 +24,9 @@ namespace CS.WebPublic.Areas.Api.Controllers
             }
             catch (Exception ex)
             {
-                res = new ResponseApiModel();
+                res = new BalanceResponseApiModel();
                 res.Success = false;
-                res.MessageError = ex.Message;
+                res.Message = ex.Message;
             }
 
             return Ok(res);
@@ -45,7 +45,7 @@ namespace CS.WebPublic.Areas.Api.Controllers
             {
                 res = new ResponseApiModel();
                 res.Success = false;
-                res.MessageError = ex.Message;
+                res.Message = ex.Message;
             }
 
             return Ok(res);
@@ -64,7 +64,7 @@ namespace CS.WebPublic.Areas.Api.Controllers
             {
                 res = new ResponseApiModel();
                 res.Success = false;
-                res.MessageError = ex.Message;
+                res.Message = ex.Message;
             }
 
             return Ok(res);
@@ -84,7 +84,7 @@ namespace CS.WebPublic.Areas.Api.Controllers
             {
                 res = new ResponseApiModel();
                 res.Success = false;
-                res.MessageError = ex.Message;
+                res.Message = ex.Message;
             }
 
             return Ok(res);
@@ -108,7 +108,7 @@ namespace CS.WebPublic.Areas.Api.Controllers
             {
                 res = new ResponseApiModel();
                 res.Success = false;
-                res.MessageError = ex.Message;
+                res.Message = ex.Message;
             }
 
             return Ok(res);
@@ -132,7 +132,7 @@ namespace CS.WebPublic.Areas.Api.Controllers
             {
                 res = new ResponseApiModel();
                 res.Success = false;
-                res.MessageError = ex.Message;
+                res.Message = ex.Message;
             }
 
             return Ok(res);

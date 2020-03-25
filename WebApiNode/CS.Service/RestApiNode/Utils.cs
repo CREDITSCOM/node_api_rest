@@ -279,5 +279,28 @@ namespace CS.Service.RestApiNode
             var diff = (7 + (dt.DayOfWeek - startOfWeek)) % 7;
             return dt.AddDays(-1 * diff).Date;
         }
+
+
+        public static string Compress(string stringIn)
+        {
+            byte[] byteArray = Encoding.UTF8.GetBytes(stringIn);
+
+            MemoryStream stream = new MemoryStream(byteArray);
+            System.IO.Compression.GZipStream sw = new System.IO.Compression.GZipStream(stream, System.IO.Compression.CompressionMode.Compress);
+
+            sw.Write(byteArray, 0, byteArray.Length);
+            sw.Close();
+
+            byteArray = stream.ToArray();
+            System.Text.StringBuilder sB = new System.Text.StringBuilder(byteArray.Length);
+            foreach (byte item in byteArray)
+            {
+                sB.Append((char)item);
+            }
+            stream.Close();
+            sw.Dispose();
+            stream.Dispose();
+            return sB.ToString();
+        }
     }
 }

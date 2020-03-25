@@ -10,9 +10,10 @@ namespace CS.Service.RestApiNode.Models
         public bool Success { get; set; }
 
         public string Message { get; set; }
+
     }
 
-    public partial class ResponseApiModel :AbstractResponseApiModel
+    public partial class ResponseApiModel : AbstractResponseApiModel
     {
         public ResponseApiModel()
         {
@@ -21,8 +22,6 @@ namespace CS.Service.RestApiNode.Models
         }
 
         public long? TransactionInnerId { get; set; }
-
-        public string MessageError { get; set; }
 
         public Decimal Amount { get; set; }
 
@@ -100,6 +99,25 @@ namespace CS.Service.RestApiNode.Models
 
     }
 
+    public class BalanceResponseApiModel : AbstractResponseApiModel
+    {
+        public BalanceResponseApiModel()
+        {
+            Tokens = new List<Token>();
+        }
+
+        public Decimal Balance { get; set; }
+
+
+        public ICollection<Token> Tokens { get; set; }
+
+
+        public Decimal DelegatedOut { get; set; }
+
+        public Decimal DelegatedIn { get; set; }
+
+    }
+
     /// <summary>
     /// Модель элемент списка
     /// </summary>
@@ -115,17 +133,17 @@ namespace CS.Service.RestApiNode.Models
 
         public Decimal Amount { get; set; }
 
-        public string AmountAsString { get; set; }
+    }
 
-        public Decimal DelegatedOut { get; set; }
-        
-        public string DelegatedOutAsString { get; set; }
+    public class Token
+    {
+        public string PublicKey { get; set; }
 
-        public Decimal DelegatedIn { get; set; }
+        public string Name { get; set; }
 
-        public string DelegatedInAsStirng { get; set; }
+        public string Alias { get; set; }
 
-        public string DelegatedTerm { get; set; }
+        public Decimal Amount { get; set; }
 
     }
 
@@ -133,7 +151,7 @@ namespace CS.Service.RestApiNode.Models
     public class TransactionInfo
     {
         public string Id { get; set; }
-        public string FromAccount{ get; set; }
+        public string FromAccount { get; set; }
         public string ToAccount { get; set; }
         public DateTime Time { get; set; }
         public string Value { get; set; }
@@ -152,9 +170,65 @@ namespace CS.Service.RestApiNode.Models
         }
         public bool Found { get; set; }
         public string UserData { get; set; }
+
         public List<TxProperty> Props = new List<TxProperty>();
         public string Signature { get; set; }
         public List<TxFee> ExtraFee { get; set; }
+
+        public Extra Bundle { get; set; }
+
+    }
+
+    public class Extra
+    {
+        public SmartContractModel Contract { get; set; }
+
+        public SmartInfo ContractInfo { get; set; }
+
+    }
+
+
+    public class SmartContractModel
+    {
+        public bool ForgetNewState { get; set; }
+
+        public SmartContractExecuteModel Execute { get; set; }
+
+        public SmartContractDeployModel Deploy { get; set; }
+
+    }
+
+    public class SmartContractExecuteModel
+    {
+        public SmartContractExecuteModel()
+        {
+            Params = new List<string>();
+        }
+        public string Method { get; set; }
+
+        public List<string> Params { get; set; }
+    }
+
+
+    public class SmartContractDeployModel
+    {
+        public string SourceCode { get; set; }
+        public int TokenStandard { get; set; }
+        
+        public string HashState { get; set; }
+    }
+
+    public class SmartInfo
+    {
+        //SmartDeploy  { get; set; }
+        //SmartExecution  { get; set; }
+    }
+
+    public class SmartSourceCode : AbstractResponseApiModel
+    {
+        public string gZipped { get; set; }
+
+        public string sourceString { get; set; }
     }
 
     public class TxProperty

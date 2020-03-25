@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
+using System.IO;
 using CS.Db.Context;
 using CS.Service.RestApiNode;
 using CS.Service.RestApiNode.Models;
@@ -12,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NodeAPIClient.Services;
 
 namespace CS.WebApi.Areas.Api.Controllers
 {
@@ -62,7 +65,7 @@ namespace CS.WebApi.Areas.Api.Controllers
         public ActionResult<ResponseApiModel> GetBalance(RequestApiModel model)
         {
             InitAuthKey(model);
-            ResponseApiModel res;
+            BalanceResponseApiModel res;
             try
             {
                 res = ServiceProvider.GetService<MonitorService>().GetBalance(model);
@@ -71,9 +74,9 @@ namespace CS.WebApi.Areas.Api.Controllers
             }
             catch (Exception ex)
             {
-                res = new ResponseApiModel();
+                res = new BalanceResponseApiModel();
                 res.Success = false;
-                res.MessageError = ex.Message;
+                res.Message = ex.Message;
             }
 
             return Ok(res);
@@ -101,9 +104,32 @@ namespace CS.WebApi.Areas.Api.Controllers
             return Ok(res);
         }
 
+
         [AuthKeyFilter]
-        [HttpPost("GetTransaction")]
-        public ActionResult<ResponseApiModel> GetTransaction(RequestGetterApiModel model)
+        [HttpPost("GetContract")]
+        public ActionResult<ResponseApiModel> GetContract(RequestGetterApiModel model)
+        {
+            InitAuthKey(model);
+            ResponseApiModel res;
+            try
+            {
+                res = ServiceProvider.GetService<MonitorService>().GetContract(model);
+
+                res.Success = true;
+            }
+            catch (Exception ex)
+            {
+                res = new ResponseApiModel();
+                res.Success = false;
+                res.Message = ex.Message;
+            }
+            
+            return Ok(res);
+        }
+
+        [AuthKeyFilter]
+        [HttpPost("GetTransactionInfo")]
+        public ActionResult<ResponseApiModel> GetTransactionInfo(RequestGetterApiModel model)
         {
             InitAuthKey(model);
             ResponseApiModel res;
@@ -117,7 +143,86 @@ namespace CS.WebApi.Areas.Api.Controllers
             {
                 res = new ResponseApiModel();
                 res.Success = false;
-                res.MessageError = ex.Message;
+                res.Message = ex.Message;
+            }
+
+            return Ok(res);
+        }
+
+        [AuthKeyFilter]
+        [HttpPost("GetWalletTransactions")]
+        public ActionResult<ResponseApiModel> GetWalletTransactions(AbstractRequestApiModel model)
+        {
+            InitAuthKey(model);
+            ResponseApiModel res;
+            try
+            {
+                res = ServiceProvider.GetService<MonitorService>().GetWalletTransactions(model);
+
+                res.Success = true;
+            }
+            catch (Exception ex)
+            {
+                res = new ResponseApiModel();
+                res.Success = false;
+                res.Message = ex.Message;
+            }
+
+            return Ok(res);
+        }
+
+        [AuthKeyFilter]
+        [HttpPost("GetContractFromTransaction")]
+        public ActionResult<ResponseApiModel> GetContractFromTransaction(RequestGetterApiModel model)
+        {
+            InitAuthKey(model);
+            SmartSourceCode ret;
+            ResponseApiModel res;
+            try
+            {
+                ret = new SmartSourceCode();
+                res = ServiceProvider.GetService<MonitorService>().GetTransaction(model);
+                if (res.TransactionInfo.Bundle!=null && res.TransactionInfo.Bundle.Contract.Deploy != null)
+                {
+
+                }
+                ret.sourceString = res.TransactionInfo.Bundle.Contract.Deploy.SourceCode;
+                ret.gZipped = Utils.Compress(res.TransactionInfo.Bundle.Contract.Deploy.SourceCode);
+                ret.Success = true;
+            }
+            catch (Exception ex)
+            {
+                ret = new SmartSourceCode();
+                ret.Success = false;
+                ret.Message = ex.Message;
+            }
+
+            return Ok(ret);
+        }
+
+
+        [AuthKeyFilter]
+        [HttpPost("GetContractByAddress")]
+        public ActionResult<ResponseApiModel> GetContractByAddress(RequestApiModel model)
+        {
+            InitAuthKey(model);
+
+            SmartSourceCode res;
+            try
+            {
+                res = ServiceProvider.GetService<MonitorService>().GetContractByAddress(model);
+                if(res.sourceString != null/* && model.CompressString*/)
+                {
+                    res.gZipped = Utils.Compress(res.sourceString);
+                    res.sourceString = "";
+                }
+                res.Success = true;
+            }
+            catch (Exception ex)
+            {
+                res = new SmartSourceCode();
+                res.Success = false;
+                res.Message = ex.Message;
             }
 
             return Ok(res);
@@ -144,7 +249,7 @@ namespace CS.WebApi.Areas.Api.Controllers
             {
                 res = new ResponseApiModel();
                 res.Success = false;
-                res.MessageError = ex.Message;
+                res.Message = ex.Message;
             }
 
             return Ok(res);
@@ -171,7 +276,7 @@ namespace CS.WebApi.Areas.Api.Controllers
             {
                 res = new ResponseApiModel();
                 res.Success = false;
-                res.MessageError = ex.Message;
+                res.Message = ex.Message;
             }
 
             return Ok(res);
@@ -197,7 +302,7 @@ namespace CS.WebApi.Areas.Api.Controllers
             {
                 res = new ResponseApiModel();
                 res.Success = false;
-                res.MessageError = ex.Message;
+                res.Message = ex.Message;
             }
 
             return Ok(res);
@@ -225,7 +330,7 @@ namespace CS.WebApi.Areas.Api.Controllers
             {
                 res = new ResponseApiModel();
                 res.Success = false;
-                res.MessageError = ex.Message;
+                res.Message = ex.Message;
             }
 
             return Ok(res);
