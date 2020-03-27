@@ -1,6 +1,7 @@
 ﻿using CS.Service.Monitor;
 using CS.Service.RestApiNode.Models;
 using NodeApi;
+using System;
 
 namespace CS.Service.RestApiNode
 {
@@ -20,7 +21,7 @@ namespace CS.Service.RestApiNode
                 Fee = Utils.FeeByIndex(tr.Fee.Commission),
                 InnerId = tr.Id,
                 Time = Utils.UnixTimeStampToDateTime(tr.TimeCreation),
-                Status = "Success",
+                Status = "Success",//?????????????????????????????????
                 Signature = Utils.ConvertHash(tr.Signature),
                 Bundle = (tr.SmartContract != null || tr.SmartInfo != null) ? new Extra
                 {
@@ -57,6 +58,29 @@ namespace CS.Service.RestApiNode
 
             return tInfo;
         }
+
+
+        public TransactionApiModel ApiToShorttransaction(SealedTransaction tr)
+        {
+            var val = Convert.ChangeType(tr.Trxn.Type, tr.Trxn.Type.GetTypeCode());
+            var wtr = new TransactionApiModel
+            {
+                Id = GetTxId(tr.Id),
+                FromAccount = SimpleBase.Base58.Bitcoin.Encode(tr.Trxn.Source),
+                ToAccount = SimpleBase.Base58.Bitcoin.Encode(tr.Trxn.Target),
+                Time = Utils.UnixTimeStampToDateTime(tr.Trxn.TimeCreation),
+                Sum = FormatAmount(tr.Trxn.Amount),
+                Fee = Utils.FeeByIndex(tr.Trxn.Fee.Commission),
+                Currency = (tr.Trxn.Currency == 1) ? "CS" : "",
+                InnerId = tr.Trxn.Id,
+                Type = val.ToString(),
+                Status = "Success"
+            };
+
+            return wtr;
+        }
+
+
         private static string GetTxId(TransactionId id)
         {
             return id == null ? null : $"{id.PoolSeq}.{id.Index + 1}";

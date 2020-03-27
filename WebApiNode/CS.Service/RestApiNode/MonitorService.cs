@@ -17,7 +17,7 @@ namespace CS.Service.RestApiNode
         {
         }
 
-        public BalanceResponseApiModel GetBalance(RequestApiModel model)
+        public BalanceResponseApiModel GetBalance(RequestKeyApiModel model)
         {
             var response = new BalanceResponseApiModel();
 
@@ -98,7 +98,7 @@ namespace CS.Service.RestApiNode
                 var result = client.SmartContractGet(publicKeyByte.ToArray());
                 if(result.SmartContract != null && result.SmartContract.SmartContractDeploy != null)
                 {
-                    response.sourceString = result.SmartContract.SmartContractDeploy.SourceCode;
+                    response.SourceString = result.SmartContract.SmartContractDeploy.SourceCode;
                 }
             }
 
@@ -133,9 +133,9 @@ namespace CS.Service.RestApiNode
 
 
 
-        public ResponseApiModel GetWalletTransactions(RequestKeyApiModel model)
+        public WalletTransactionsResponseApiModel GetWalletTransactions(RequestKeyApiModel model)
         {
-            var response = new ResponseApiModel();
+            var response = new WalletTransactionsResponseApiModel();
 
             using (var client = GetClientByModel(model))
             {
@@ -144,6 +144,10 @@ namespace CS.Service.RestApiNode
                 //var tInfo = ToTransactionInfo(0, trId, tr.Transaction.Trxn);
                 //tInfo.Found = tr.Found;
                 //response.TransactionInfo = trxs;
+                foreach(var tr in trxs.Transactions)
+                {
+                    response.Transactions.Add(ApiToShorttransaction(tr));
+                }
             }
 
             return response;

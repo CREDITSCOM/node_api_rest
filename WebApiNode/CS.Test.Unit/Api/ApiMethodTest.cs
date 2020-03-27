@@ -71,7 +71,7 @@ namespace CS.Test.Unit.Api
         public void GetBalanceTest()
         {
             var service = new MonitorService(Configuration);
-            var model = new RequestApiModel();
+            var model = new RequestKeyApiModel();
             model.PublicKey =
                 //"CpXgMszs74C8ncSAyMiBEfZUhXtM6hyGBXRdXtG8aUUU";
                 "H5ptdUUfjJBGiK2X3gN2EzNYxituCUUnXv2tiMdQKP3b";

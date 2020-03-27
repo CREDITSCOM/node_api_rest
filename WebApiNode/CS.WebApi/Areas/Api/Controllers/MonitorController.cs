@@ -62,7 +62,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
         [AuthKeyFilter]
         [HttpPost("GetBalance")]
-        public ActionResult<ResponseApiModel> GetBalance(RequestApiModel model)
+        public ActionResult<ResponseApiModel> GetBalance(RequestKeyApiModel model)
         {
             InitAuthKey(model);
             BalanceResponseApiModel res;
@@ -149,12 +149,36 @@ namespace CS.WebApi.Areas.Api.Controllers
             return Ok(res);
         }
 
+        //[AuthKeyFilter]
+        //[HttpPost("GetWalletTransactions")]
+        //public ActionResult<ResponseApiModel> GetWalletTransactions(RequestKeyApiModel model)
+        //{
+        //    InitAuthKey(model);
+        //    ResponseApiModel res;
+        //    try
+        //    {
+        //        res = ServiceProvider.GetService<MonitorService>().GetWalletTransactions(model);
+
+        //        res.Success = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        res = new ResponseApiModel();
+        //        res.Success = false;
+        //        res.Message = ex.Message;
+        //    }
+
+        //    return Ok(res);
+        //}
+
+
         [AuthKeyFilter]
-        [HttpPost("GetWalletTransactions")]
-        public ActionResult<ResponseApiModel> GetWalletTransactions(RequestKeyApiModel model)
+        [HttpPost("GetTransactionsByWallet")]
+        public ActionResult<ResponseApiModel> GetTransactionsByWallet(RequestKeyApiModel model)
         {
             InitAuthKey(model);
-            ResponseApiModel res;
+
+            WalletTransactionsResponseApiModel res;
             try
             {
                 res = ServiceProvider.GetService<MonitorService>().GetWalletTransactions(model);
@@ -163,7 +187,7 @@ namespace CS.WebApi.Areas.Api.Controllers
             }
             catch (Exception ex)
             {
-                res = new ResponseApiModel();
+                res = new WalletTransactionsResponseApiModel();
                 res.Success = false;
                 res.Message = ex.Message;
             }
@@ -172,27 +196,31 @@ namespace CS.WebApi.Areas.Api.Controllers
         }
 
         [AuthKeyFilter]
-        [HttpPost("GetContractFromTransaction")]
-        public ActionResult<TransactionInfo> GetContractFromTransaction(RequestGetterApiModel model)
+        [HttpPost("GetTokenBalance")]
+        public ActionResult<TokensResponseApiModel> GetTokenBalance(RequestTokensApiModel model)
         {
             InitAuthKey(model);
-            SmartSourceCode ret;
-            TransactionInfo res;
+            BalanceResponseApiModel res;
+            TokensResponseApiModel ret;
             try
             {
-                ret = new SmartSourceCode();
-                res = ServiceProvider.GetService<MonitorService>().GetTransaction(model);
-                if (res.Bundle!=null && res.Bundle.Contract.Deploy != null)
-                {
-
+                res = ServiceProvider.GetService<MonitorService>().GetBalance(model);
+                ret = new TokensResponseApiModel();
+                string[] tkns = model.Tokens.Split(", ");
+                foreach (var tok in res.Tokens) {
+                    foreach (var tt in tkns)
+                    {
+                        if (tok.Alias==tt || tok.Name ==tt)
+                        {
+                            ret.Tokens.Add(tok);
+                        }
+                    }
                 }
-                ret.sourceString = res.Bundle.Contract.Deploy.SourceCode;
-                ret.gZipped = Utils.Compress(res.Bundle.Contract.Deploy.SourceCode);
                 ret.Success = true;
             }
             catch (Exception ex)
             {
-                ret = new SmartSourceCode();
+                ret = new TokensResponseApiModel();
                 ret.Success = false;
                 ret.Message = ex.Message;
             }
@@ -200,56 +228,6 @@ namespace CS.WebApi.Areas.Api.Controllers
             return Ok(ret);
         }
 
-
-        [AuthKeyFilter]
-        [HttpPost("GetContractByAddress")]
-        public ActionResult<ResponseApiModel> GetContractByAddress(RequestKeyApiModel model)
-        {
-            InitAuthKey(model);
-
-            SmartSourceCode res;
-            try
-            {
-                res = ServiceProvider.GetService<MonitorService>().GetContractByAddress(model);
-                if(res.sourceString != null/* && model.CompressString*/)
-                {
-                    res.gZipped = Utils.Compress(res.sourceString);
-                    res.sourceString = "";
-                }
-                res.Success = true;
-            }
-            catch (Exception ex)
-            {
-                res = new SmartSourceCode();
-                res.Success = false;
-                res.Message = ex.Message;
-            }
-
-            return Ok(res);
-        }
-
-        [AuthKeyFilter]
-        [HttpPost("ContractValidation")]
-        public ActionResult<ContractValidationResponse> ContractValidation(RequestContractValidationModel model)
-        {
-            InitAuthKey(model);
-
-            ContractValidationResponse res;
-            try
-            {
-
-                res = ServiceProvider.GetService<MonitorService>().ValidateContract(model);
-                res.Success = true;
-            }
-            catch (Exception ex)
-            {
-                res = new ContractValidationResponse();
-                res.Success = false;
-                res.Message = ex.Message;
-            }
-
-            return Ok(res);
-        }
 
         [AuthKeyFilter]
         [HttpPost("GetListTransactionByBlock")]

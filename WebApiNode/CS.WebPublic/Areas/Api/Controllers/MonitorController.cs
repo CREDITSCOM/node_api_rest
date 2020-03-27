@@ -14,7 +14,7 @@ namespace CS.WebPublic.Areas.Api.Controllers
         public MonitorController(IServiceProvider provider) : base(provider) { }
 
         [HttpPost("GetBalance")]
-        public ActionResult<ResponseApiModel> GetBalance(RequestApiModel model)
+        public ActionResult<ResponseApiModel> GetBalance(RequestKeyApiModel model)
         {
             BalanceResponseApiModel res;
             try

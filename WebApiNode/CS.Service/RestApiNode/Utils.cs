@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using NodeApi;
@@ -283,24 +284,32 @@ namespace CS.Service.RestApiNode
 
         public static string Compress(string stringIn)
         {
-            byte[] byteArray = Encoding.UTF8.GetBytes(stringIn);
-
-            MemoryStream stream = new MemoryStream();
-            System.IO.Compression.GZipStream sw = new System.IO.Compression.GZipStream(stream, System.IO.Compression.CompressionMode.Compress);
-
-            sw.Write(byteArray, 0, byteArray.Length);
-            sw.Close();
-
-            byte[] result = stream.ToArray();
-            System.Text.StringBuilder sB = new System.Text.StringBuilder(byteArray.Length);
-            foreach (byte item in result)
+            //byte[] byteArray = Encoding.UTF8.GetBytes(stringIn);
+            MemoryStream originalStream = new MemoryStream(Encoding.UTF8.GetBytes(stringIn));
+            MemoryStream compressedStream = new MemoryStream();
+            using (DeflateStream compressionStream = new DeflateStream(compressedStream, CompressionMode.Compress))
             {
-                sB.Append((char)item);
+                originalStream.CopyTo(compressionStream);
             }
-            stream.Close();
-            sw.Dispose();
-            stream.Dispose();
-            return sB.ToString();
+
+            byte[] result = compressedStream.ToArray();
+            //System.Text.StringBuilder sB = new System.Text.StringBuilder(byteArray.Length);
+            string st = SimpleBase.Base58.Bitcoin.Encode(result);
+            //foreach (byte item in result)
+            //{
+            //    sB.Append((char)item);
+            //}
+            //stream.Close();
+            //sw.Dispose();
+            //stream.Dispose();
+
+            MemoryStream recoveredStream = new MemoryStream();
+            using (DeflateStream decompressionStream = new DeflateStream(recoveredStream, CompressionMode.Decompress))
+            {
+                decompressionStream.CopyTo(recoveredStream);
+            }
+
+            return st/*sB.ToString()*/;
         }
     }
 }

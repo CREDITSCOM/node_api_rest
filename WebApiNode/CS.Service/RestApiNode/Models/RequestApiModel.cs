@@ -67,6 +67,11 @@ namespace CS.Service.RestApiNode.Models
         public DateTimeOffset? DateExpired { get; set; }
     }
 
+    public class RequestTokensApiModel : RequestKeyApiModel
+    {
+        public string Tokens { get; set; }
+    }
+
     public class RequestContractValidationModel : AbstractRequestApiModel
     {
         public string SourceString { get; set; }
@@ -79,13 +84,15 @@ namespace CS.Service.RestApiNode.Models
 
     public class RequestSourceCodeApiModel : AbstractRequestApiModel
     {
-        public bool CompressString { get; set; }
+        public bool Compressed { get; set; }
     }
 
     public class RequestKeyApiModel : RequestSourceCodeApiModel
     {
         public string PublicKey { get; set; }
     }
+
+
 
     public class TokenParamsApiModel
     {

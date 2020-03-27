@@ -57,6 +57,32 @@ namespace CS.Service.RestApiNode.Models
         public string MessageError { get; set; }
     }
 
+    public partial class WalletTransactionsResponseApiModel : AbstractResponseApiModel
+    {
+        public WalletTransactionsResponseApiModel()
+        {
+            Transactions = new List<TransactionApiModel>();
+        }
+
+        public ICollection<TransactionApiModel> Transactions { get; set; }
+
+
+    }
+
+    public partial class TransactionApiModel
+    {
+        public string Id { get; set; }
+        public string FromAccount { get; set; }
+        public string ToAccount { get; set; }
+        public DateTime Time { get; set; }
+        public string Sum { get; set; }
+        public string Fee { get; set; }
+        public string Currency { get; set; }
+        public long InnerId { get; set; }
+        public string Type { get; set; }
+        public string Status { get; set; }
+    }
+
 
     public partial class DelegatedStructure
     {
@@ -115,6 +141,17 @@ namespace CS.Service.RestApiNode.Models
         public Decimal DelegatedOut { get; set; }
 
         public Decimal DelegatedIn { get; set; }
+
+    }
+
+    public class TokensResponseApiModel : AbstractResponseApiModel
+    {
+        public TokensResponseApiModel()
+        {
+            Tokens = new List<Token>();
+        }
+
+        public ICollection<Token> Tokens { get; set; }
 
     }
 
@@ -227,8 +264,9 @@ namespace CS.Service.RestApiNode.Models
     public class SmartSourceCode : AbstractResponseApiModel
     {
         public string gZipped { get; set; }
+        //public ICollection<byte> gZipped { get; set; }
 
-        public string sourceString { get; set; }
+        public string SourceString { get; set; }
     }
 
     //std::string sourceCode;
