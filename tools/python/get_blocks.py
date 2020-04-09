@@ -5,8 +5,8 @@ import json
 #url = 'http://apinode.credits.com/api/Monitor/GetWalletData/GetWalletData'
 #url =  'http://localhost:60476/api/Monitor/GetBlocks'
 #url =  'http://169.63.5.243:5006/api/Monitor/GetBlocks'
-#url =  'http://localhost:60476/api/Monitor/GetWalletData'
-url = 'http://165.22.212.105:5000/api/Monitor/GetBlocks'
+url =  'http://localhost:8080/api/Monitor/GetBlocks'
+#url = 'http://165.22.212.105:5000/api/Monitor/GetBlocks'
 
 headers = {
     'Content-type': 'application/json'
