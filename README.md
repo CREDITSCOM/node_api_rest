@@ -11,8 +11,8 @@
 - run from command prompt or intergate into IIS
 ## How to build and run in Ubuntu 18.04
 - to prepare dotnet core 3.1: runtime + SDK + asp runtime, run
-	<code>
-	<p/>sudo add-apt-repository universe
+	<p/>
+	<code>sudo add-apt-repository universe
 	<p/>sudo apt-get update
 	<p/>sudo apt-get install apt-transport-https
 	<p/>sudo apt-get update
