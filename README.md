@@ -20,7 +20,7 @@
 	<p/>sudo apt-get install aspnetcore-runtime-3.1
 	<p/>sudo apt-get install dotnet-sdk-3.1
 	</code>
-	<p/>if you receive an error message similar to Unable to locate package aspnetcore-runtime-3.1, see the [Troubleshoot](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804#troubleshoot-the-package-manager) the package manager section.
+	<p/>if you receive an error message similar to Unable to locate package aspnetcore-runtime-3.1, see the https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804#troubleshoot-the-package-manager.
 - enter the subdirectory WebApiNode/thirt-party/node_api/thrift-utils/
 - generate node native API support files running <p/><code>sudo ./thrift_gen_node.sh</code>
 - return to subdirectory WebApiNode/
