@@ -96,9 +96,56 @@ namespace CS.Service.RestApiNode
             {
                 var publicKeyByte = SimpleBase.Base58.Bitcoin.Decode(model.PublicKey);
                 var result = client.SmartContractGet(publicKeyByte.ToArray());
-                if(result.SmartContract != null && result.SmartContract.SmartContractDeploy != null)
+                if (result.SmartContract != null && result.SmartContract.SmartContractDeploy != null)
                 {
                     response.SourceString = result.SmartContract.SmartContractDeploy.SourceCode;
+                }
+            }
+
+            return response;
+        }
+
+
+        public SmartContractMethodsModel GetContractMethods(RequestKeyApiModel model)
+        {
+            var response = new SmartContractMethodsModel();
+
+            using (var client = GetClientByModel(model))
+            {
+                var publicKeyByte = SimpleBase.Base58.Bitcoin.Decode(model.PublicKey);
+                var preResult = client.SmartContractGet(publicKeyByte.ToArray());
+                if (preResult.SmartContract != null && preResult.SmartContract.SmartContractDeploy != null)
+                {
+                    //response.SourceString = result.SmartContract.SmartContractDeploy.SourceCode;
+                    var finalResult = client.ContractAllMethodsGet(preResult.SmartContract.SmartContractDeploy.ByteCodeObjects);
+                    foreach (var met in finalResult.Methods)
+                    {
+                        var method = new ContractMethod();
+                        method.Name = met.Name;
+                        method.ReturnType = met.ReturnType;
+                        foreach (var arg in met.Arguments)
+                        {
+                            var ar = new ModelMethodArgument();
+                            ar.Name = arg.Name;
+                            ar.Type = arg.Type;
+                            foreach (var ann in arg.Annotations)
+                            {
+                                var an = new ModelAnnotation();
+                                an.Name = ann.Name;
+                                an.Arguments = ann.Arguments;
+                                ar.Annotations.Add(an);
+                            }
+                            method.Arguments.Add(ar);
+                        }
+                        foreach (var ann in met.Annotations)
+                        {
+                            var an = new ModelAnnotation();
+                            an.Name = ann.Name;
+                            an.Arguments = ann.Arguments;
+                            method.Annotations.Add(an);
+                        }
+                        response.Methods.Add(method);
+                    }
                 }
             }
 
@@ -112,7 +159,7 @@ namespace CS.Service.RestApiNode
             using (var client = GetClientByModel(model))
             {
                 var result = client.SmartContractCompile(model.SourceString);
-                if(result.ByteCodeObjects != null)
+                if (result.ByteCodeObjects != null)
                 {
                     response.Deploy = new ContractDeploy();
                 }
@@ -121,7 +168,7 @@ namespace CS.Service.RestApiNode
                     var bc = new BCObject();
                     bc.Name = a.Name;
                     bc.ByteCode = a.ByteCode;
-                    
+
                     response.Deploy.ByteCodeObjects.Add(bc);
                 }
                 response.Deploy.SourceCode = model.SourceString;
@@ -130,9 +177,6 @@ namespace CS.Service.RestApiNode
 
             return response;
         }
-
-
-
         public WalletTransactionsResponseApiModel GetWalletTransactions(RequestKeyApiModel model)
         {
             var response = new WalletTransactionsResponseApiModel();
