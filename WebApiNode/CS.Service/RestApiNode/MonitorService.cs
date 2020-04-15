@@ -177,17 +177,14 @@ namespace CS.Service.RestApiNode
 
             return response;
         }
-        public WalletTransactionsResponseApiModel GetWalletTransactions(RequestKeyApiModel model)
+        public WalletTransactionsResponseApiModel GetWalletTransactions(RequestTransactionsApiModel model)
         {
             var response = new WalletTransactionsResponseApiModel();
 
             using (var client = GetClientByModel(model))
             {
                 var pKey = SimpleBase.Base58.Bitcoin.Decode(model.PublicKey).ToArray();
-                var trxs = client.TransactionsGet(pKey, 0, 10);
-                //var tInfo = ToTransactionInfo(0, trId, tr.Transaction.Trxn);
-                //tInfo.Found = tr.Found;
-                //response.TransactionInfo = trxs;
+                var trxs = client.TransactionsGet(pKey, model.Offset, model.Limit);
                 foreach(var tr in trxs.Transactions)
                 {
                     response.Transactions.Add(ApiToShorttransaction(tr));

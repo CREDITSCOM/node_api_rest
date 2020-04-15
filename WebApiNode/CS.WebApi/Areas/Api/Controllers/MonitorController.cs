@@ -174,7 +174,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
         [AuthKeyFilter]
         [HttpPost("GetTransactionsByWallet")]
-        public ActionResult<ResponseApiModel> GetTransactionsByWallet(RequestKeyApiModel model)
+        public ActionResult<ResponseApiModel> GetTransactionsByWallet(RequestTransactionsApiModel model)
         {
             InitAuthKey(model);
 
