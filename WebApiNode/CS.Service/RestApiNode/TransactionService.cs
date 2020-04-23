@@ -106,21 +106,24 @@ namespace CS.Service.RestApiNode
                         transac.Amount = BCTransactionTools.GetAmountByDouble_C(model.Amount);
                     }
 
-                    if (model.Fee == 0 && model.Amount - model.Fee >= 0.0M)
+                    if (model.Fee == 0)
                     {
-                        var minFee = 0.008740M;
-                        model.Fee = minFee;
-                        model.Amount = model.Amount - minFee;
-                        //GetActualFee(RequestFeeModel)
-                        //ServiceProvider.GetService<MonitorService>().GetBalance(model);
+                        if (model.Amount - model.Fee >= 0.0M)
+                        {
+                            var minFee = 0.008740M;
+                            model.Fee = minFee;
+                            model.Amount = model.Amount - minFee;
+                            //GetActualFee(RequestFeeModel)
+                            //ServiceProvider.GetService<MonitorService>().GetBalance(model);
 
-                        transac.Fee = BCTransactionTools.EncodeFeeFromDouble(Convert.ToDouble(minFee));
-                        transac.Amount = BCTransactionTools.GetAmountByDouble_C(model.Amount - minFee);
+                            transac.Fee = BCTransactionTools.EncodeFeeFromDouble(Convert.ToDouble(minFee));
+                            transac.Amount = BCTransactionTools.GetAmountByDouble_C(model.Amount - minFee);
 
-                    }
-                    else
-                    {
-                        throw new Exception("Fee is zero and couldn't be get from transaction sum");
+                        }
+                        else
+                        {
+                            throw new Exception("Fee is zero and couldn't be get from transaction sum");
+                        }
                     }
                     transac.Target = SimpleBase.Base58.Bitcoin.Decode(model.ReceiverPublicKey).ToArray();
                 }
@@ -272,7 +275,7 @@ namespace CS.Service.RestApiNode
                         response.TransactionId = $"{result.Id.PoolSeq}.{result.Id.Index + 1}";
                 }
             }
-
+            response.DataResponse.RecommendedFee = BCTransactionTools.GetDecimalByAmount(response.FlowResult.Fee);
             return response;
         }
     }
