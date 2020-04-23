@@ -141,7 +141,7 @@ namespace CS.Db.Migrations
                         new
                         {
                             ID = 3,
-                            AuthKey = "6e253096-621d-4051-96f8-d47cedbe4a0a",
+                            AuthKey = "",//"6e253096-621d-4051-96f8-d47cedbe4a0a",
                             IsActive = true,
                             Name = "User1"
                         },
