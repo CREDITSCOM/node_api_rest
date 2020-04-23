@@ -15,6 +15,8 @@ namespace CS.Service.RestApiNode
     {
         public IConfiguration Configuration { get; }
 
+        public decimal MinTransactionFee => 0.008740234375m;
+
         public TransactionService(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -95,11 +97,17 @@ namespace CS.Service.RestApiNode
                 {
                     if (model.Amount == 0)
                     {
-                        Decimal res;
-                        if (Decimal.TryParse(model.AmountAsString.Replace(",", "."), NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out res))
-                            transac.Amount = BCTransactionTools.GetAmountByDouble_C(res);
-                        else
-                            transac.Amount = BCTransactionTools.GetAmountByDouble_C(model.Amount);
+                        if (string.IsNullOrEmpty(model.AmountAsString))
+                        {
+                            transac.Amount = new Amount();
+                        }
+                        else {
+                            Decimal res;
+                            if (Decimal.TryParse(model.AmountAsString.Replace(",", "."), NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out res))
+                                transac.Amount = BCTransactionTools.GetAmountByDouble_C(res);
+                            else
+                                transac.Amount = BCTransactionTools.GetAmountByDouble_C(model.Amount);
+                        }
                     }
                     else
                     {
@@ -108,7 +116,7 @@ namespace CS.Service.RestApiNode
 
                     if (model.Fee == 0)
                     {
-                        var minFee = 0.008740234375M;
+                        var minFee = MinTransactionFee;
                         if (model.Amount - minFee >= 0.0M)
                         {
                             model.Fee = minFee;
@@ -272,10 +280,29 @@ namespace CS.Service.RestApiNode
                     response.Success = true;
                     response.TransactionInnerId = transac.Id;
                     if (result.Id != null)
+                    {
                         response.TransactionId = $"{result.Id.PoolSeq}.{result.Id.Index + 1}";
+                    }
+                    response.DataResponse.RecommendedFee = BCTransactionTools.GetDecimalByAmount(response.FlowResult.Fee);
+                    if (response.DataResponse.RecommendedFee == 0)
+                    {
+                        response.DataResponse.RecommendedFee = MinTransactionFee;
+                    }
+                    var sum = BCTransactionTools.GetDecimalByAmount(transac.Amount);
+                    if (sum > 0)
+                    {
+                        if (response.Amount == 0)
+                        {
+                            response.Amount = sum;
+                        }
+                        if(response.DataResponse.ActualSum == 0)
+                        {
+                            response.DataResponse.ActualSum = sum;
+                        }
+                    }
                 }
             }
-            response.DataResponse.RecommendedFee = BCTransactionTools.GetDecimalByAmount(response.FlowResult.Fee);
+
             return response;
         }
     }

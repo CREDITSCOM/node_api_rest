@@ -461,6 +461,10 @@ namespace CS.NodeApi.Api
 
         public static Decimal GetDecimalByAmount(Amount value)
         {
+            if(value is null)
+            {
+                return 0;
+            }
             Decimal res = value.Integral +
                 Decimal.Multiply(value.Fraction, 0.000000000000000001M);
 
