@@ -108,16 +108,16 @@ namespace CS.Service.RestApiNode
 
                     if (model.Fee == 0)
                     {
-                        if (model.Amount - model.Fee >= 0.0M)
+                        var minFee = 0.008740234375M;
+                        if (model.Amount - minFee >= 0.0M)
                         {
-                            var minFee = 0.008740M;
                             model.Fee = minFee;
                             model.Amount = model.Amount - minFee;
                             //GetActualFee(RequestFeeModel)
                             //ServiceProvider.GetService<MonitorService>().GetBalance(model);
 
                             transac.Fee = BCTransactionTools.EncodeFeeFromDouble(Convert.ToDouble(minFee));
-                            transac.Amount = BCTransactionTools.GetAmountByDouble_C(model.Amount - minFee);
+                            transac.Amount = BCTransactionTools.GetAmountByDouble_C(model.Amount);
 
                         }
                         else
