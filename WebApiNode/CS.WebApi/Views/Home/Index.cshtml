@@ -1,8 +1,21 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Credits API";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <div>
+        <h1 class="display-4">Welcome!</h1>
+        <p>Welcome to the public RESTful API to the Credits network</p>
+        <p>
+            There are some permanent links to GET info as HTML page:
+
+            <ul>
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="suppliment">/suppliment</a> - Total amount of Credits coins supplied
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="circulation">/circulation</a> - Current amount of Credits coins in circulation
+                </li>
+            </ul>
+
+        </p>
+    </div>
