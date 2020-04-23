@@ -37,7 +37,6 @@
     </PackageReference>
     <PackageReference Include="Nethereum.Web3" Version="3.6.0" />
     <PackageReference Include="SimpleBase" Version="3.0.1" />
-    <PackageReference Include="Thrift45" Version="1.0.0.1" />
   </ItemGroup>
 
   <ItemGroup>
