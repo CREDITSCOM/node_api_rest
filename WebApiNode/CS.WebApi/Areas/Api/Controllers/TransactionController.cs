@@ -45,7 +45,7 @@ namespace CS.WebApi.Areas.Api.Controllers
             }
             else
             {
-                res.DataResponse.TransactionPackagedStr = ServiceProvider
+                res.DataResponse = ServiceProvider
                 .GetService<TransactionService>().PackTransactionByApiModel(model);
             }
 

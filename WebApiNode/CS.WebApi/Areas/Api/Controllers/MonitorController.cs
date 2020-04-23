@@ -62,7 +62,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
         [AuthKeyFilter]
         [HttpPost("GetBalance")]
-        public ActionResult<ResponseApiModel> GetBalance(RequestKeyApiModel model)
+        public ActionResult<BalanceResponseApiModel> GetBalance(RequestKeyApiModel model)
         {
             InitAuthKey(model);
             BalanceResponseApiModel res;
@@ -174,7 +174,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
         [AuthKeyFilter]
         [HttpPost("GetTransactionsByWallet")]
-        public ActionResult<ResponseApiModel> GetTransactionsByWallet(RequestKeyApiModel model)
+        public ActionResult<ResponseApiModel> GetTransactionsByWallet(RequestTransactionsApiModel model)
         {
             InitAuthKey(model);
 
