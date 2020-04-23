@@ -35,6 +35,8 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+.tmp.drivedownload/
+.tmp*/
 
 # BackUps
 [Bb]ack[Uu]p/
