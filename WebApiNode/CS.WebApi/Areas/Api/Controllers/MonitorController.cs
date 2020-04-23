@@ -62,7 +62,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
         [AuthKeyFilter]
         [HttpPost("GetBalance")]
-        public ActionResult<ResponseApiModel> GetBalance(RequestKeyApiModel model)
+        public ActionResult<BalanceResponseApiModel> GetBalance(RequestKeyApiModel model)
         {
             InitAuthKey(model);
             BalanceResponseApiModel res;

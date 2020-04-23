@@ -121,8 +121,8 @@ namespace CS.Service.RestApiNode.Models
         /// </summary>
         public string TransactionPackagedStr { get; set; }
 
-
-
+        public Decimal ActualSum { get; set; }
+        public Decimal RecommendedFee { get; set; }
     }
 
     public class BalanceResponseApiModel : AbstractResponseApiModel

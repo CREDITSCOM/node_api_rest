@@ -317,6 +317,11 @@ namespace CS.Service.RestApiNode
             return cInfo;
         }
 
+        //public ResponseFeeModel GetActualFee(RequestFeeModel)
+        //{
+        //    var res = new ResponseFeeModel();
+        //    res.fee = 0.008740M;
+        //}
         public ResponseApiModel GetContract(RequestKeyApiModel model)
         {
             var response = new ResponseApiModel();

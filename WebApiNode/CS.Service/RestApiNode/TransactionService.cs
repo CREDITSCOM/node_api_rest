@@ -106,6 +106,22 @@ namespace CS.Service.RestApiNode
                         transac.Amount = BCTransactionTools.GetAmountByDouble_C(model.Amount);
                     }
 
+                    if (model.Fee == 0 && model.Amount - model.Fee >= 0.0M)
+                    {
+                        var minFee = 0.008740M;
+                        model.Fee = minFee;
+                        model.Amount = model.Amount - minFee;
+                        //GetActualFee(RequestFeeModel)
+                        //ServiceProvider.GetService<MonitorService>().GetBalance(model);
+
+                        transac.Fee = BCTransactionTools.EncodeFeeFromDouble(Convert.ToDouble(minFee));
+                        transac.Amount = BCTransactionTools.GetAmountByDouble_C(model.Amount - minFee);
+
+                    }
+                    else
+                    {
+                        throw new Exception("Fee is zero and couldn't be get from transaction sum");
+                    }
                     transac.Target = SimpleBase.Base58.Bitcoin.Decode(model.ReceiverPublicKey).ToArray();
                 }
                 else if (model.MethodApi == ApiMethodConstant.SmartDeploy)
@@ -192,8 +208,9 @@ namespace CS.Service.RestApiNode
             return transac;
         }
 
-        public string PackTransactionByApiModel(RequestApiModel model)
+        public DataResponseApiModel PackTransactionByApiModel(RequestApiModel model)
         {
+            var res = new DataResponseApiModel();
             var transac = InitTransaction(model);
             byte[] byteData;
 
@@ -206,8 +223,9 @@ namespace CS.Service.RestApiNode
                 byteData = BCTransactionTools.CreateByteHashByTransactionDelegation(transac);
             }
 
-            var res = SimpleBase.Base58.Bitcoin.Encode(byteData);
-
+            res.TransactionPackagedStr = SimpleBase.Base58.Bitcoin.Encode(byteData);
+            res.RecommendedFee = model.Fee;
+            res.ActualSum = model.Amount;
             return res;
         }
 

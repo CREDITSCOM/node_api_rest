@@ -108,7 +108,7 @@ namespace CS.WebApi.Areas.Api.Controllers
         //}
 
         [AuthKeyFilter]
-        [HttpPost("GetContractFromTransaction")]
+        [HttpPost("GetFromTransaction")]
         public ActionResult<TransactionInfo> GetContractFromTransaction(RequestGetterApiModel model)
         {
             InitAuthKey(model);
@@ -141,7 +141,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
 
         [AuthKeyFilter]
-        [HttpPost("GetContractByAddress")]
+        [HttpPost("GetByAddress")]
         public ActionResult<ResponseApiModel> GetContractByAddress(RequestKeyApiModel model)
         {
             InitAuthKey(model);
@@ -172,7 +172,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
 
         [AuthKeyFilter]
-        [HttpPost("GetContractMethods")]
+        [HttpPost("GetMethods")]
         public ActionResult<SmartContractMethodsModel> GetContractMethods(RequestKeyApiModel model)
         {
             InitAuthKey(model);
@@ -195,7 +195,7 @@ namespace CS.WebApi.Areas.Api.Controllers
         }
 
         [AuthKeyFilter]
-        [HttpPost("ContractValidation")]
+        [HttpPost("Validate")]
         public ActionResult<ContractValidationResponse> ContractValidation(RequestContractValidationModel model)
         {
             InitAuthKey(model);
