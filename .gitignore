@@ -40,4 +40,4 @@ msbuild.wrn
 [Bb]ack[Uu]p/
 sample.json
 node_info.json
-tools/python/wal_bal.json
+wal_bal.json
