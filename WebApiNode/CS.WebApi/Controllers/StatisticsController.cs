@@ -24,22 +24,6 @@ namespace CS.WebApi.Controllers
             return View("Index", _appDbCoontext.Statistics.ToList());
         }
 
-        //[Route("stats/supply")]
-        //[HttpGet]
-        //public IActionResult Supply()
-        //{
-        //    var item = _appDbCoontext.Statistics.Find("supply");
-        //    return View("Item", item);
-        //}
-
-        //[Route("stats/active")]
-        //[HttpGet]
-        //public IActionResult Active()
-        //{
-        //    var item = _appDbCoontext.Statistics.Find("active");
-        //    return View("Item", item);
-        //}
-
         [Route("stats/{any:alpha}")]
         [HttpGet]
         public IActionResult Action()
