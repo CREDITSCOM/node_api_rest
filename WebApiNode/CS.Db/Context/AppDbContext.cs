@@ -1,4 +1,5 @@
-﻿using CS.Db.Models.Application;
+﻿using CS.Db.Models;
+using CS.Db.Models.Application;
 using CS.Db.Models.Rest;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +47,14 @@ namespace CS.Db.Context
 
                 );
 
+            modelBuilder.Entity<StatisticsModel>()
+                .HasKey("Key");
 
+            modelBuilder.Entity<StatisticsModel>()
+                .HasData(
+                    new StatisticsModel() { Key = "supply", Value = "249'471'071", Description = "Total amount of Credits coins supplied" },
+                    new StatisticsModel() { Key = "active", Value = "249'171'071", Description = "Amount of Credits coins in active circulation" }
+                );
 
             base.OnModelCreating(modelBuilder);
         }
@@ -55,5 +63,7 @@ namespace CS.Db.Context
 
 
         public DbSet<SystemLogEntity> SystemLog { get; set; }
+
+        public DbSet<StatisticsModel> Statistics { get; set; }
     }
 }

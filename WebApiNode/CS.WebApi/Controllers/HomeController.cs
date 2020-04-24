@@ -43,18 +43,6 @@ namespace CS.WebApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult suppliment()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult circulation()
-        {
-            return View();
-        }
-
-        [HttpGet]
         public async Task<string> Postback()
         {
             await ReadQueryParams(isGet: true);

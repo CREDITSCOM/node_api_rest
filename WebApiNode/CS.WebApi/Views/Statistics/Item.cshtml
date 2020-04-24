@@ -1,0 +1,31 @@
+﻿@model CS.Db.Models.StatisticsModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@Model.Key</title>
+</head>
+<body>
+    <div>
+        <h4>@Model.Key</h4>
+        <h5>@Model.Description</h5>
+        <div>
+            @Model.Value
+        </div>
+    </div>
+
+<br/>
+
+<div>
+    <a asp-action="Index">Back to list</a> | 
+    <a asp-controller="Home" asp-action="Index">Back to home</a>
+</div>
+
+</body>
+</html>

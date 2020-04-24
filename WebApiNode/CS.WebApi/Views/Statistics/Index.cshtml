@@ -1,0 +1,50 @@
+﻿@model List<CS.Db.Models.StatisticsModel>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+
+<div>
+    <h4>All available values</h4>
+    <p>
+        Click on parameter link to view it in particular page
+    </p>
+    <hr />
+    <table>
+        <tr>
+            <th>Direct link</th>
+            <th>Current value</th>
+            <th>Description</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a href="./stats/@item.Key">/@item.Key</a>
+                </td>
+                <td>
+                    @item.Value
+                </td>
+                <td>
+                    @item.Description
+                </td>
+            </tr>
+        }
+    </table>
+    
+</div>
+
+<div>
+    <a asp-controller="Home" asp-action="Index">Back to home</a>
+</div>
+</body>
+</html>
