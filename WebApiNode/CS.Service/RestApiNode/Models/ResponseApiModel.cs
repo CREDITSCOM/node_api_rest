@@ -121,8 +121,8 @@ namespace CS.Service.RestApiNode.Models
         /// </summary>
         public string TransactionPackagedStr { get; set; }
 
-
-
+        public Decimal ActualSum { get; set; }
+        public Decimal RecommendedFee { get; set; }
     }
 
     public class BalanceResponseApiModel : AbstractResponseApiModel
@@ -253,6 +253,54 @@ namespace CS.Service.RestApiNode.Models
         public int TokenStandard { get; set; }
         
         public string HashState { get; set; }
+    }
+
+    public class SmartContractMethodsModel : AbstractResponseApiModel
+    {
+        public SmartContractMethodsModel()
+        {
+            Methods = new List<ContractMethod>();
+        }
+        public ICollection<ContractMethod> Methods { get; set; }
+    }
+
+    public class ContractMethod
+    {
+        public ContractMethod()
+        {
+            Arguments = new List<ModelMethodArgument> ();
+            Annotations = new List<ModelAnnotation>();
+        }
+        public string Name { get; set; }
+        public string ReturnType { get; set; }
+
+        public ICollection<ModelMethodArgument> Arguments { get; set; }
+
+        public ICollection<ModelAnnotation> Annotations { get; set; }
+    }
+
+    public class ModelMethodArgument
+    {
+        public ModelMethodArgument()
+        {
+            Annotations = new List<ModelAnnotation>();
+        }
+        public string Name { get; set; }
+        public string Type { get; set; }
+
+        public ICollection<ModelAnnotation> Annotations { get; set; }
+    }
+
+    public class ModelAnnotation
+    {
+        public ModelAnnotation()
+        {
+            Arguments = new Dictionary<string, string>();
+        }
+        public string Name { get; set; }
+
+        public IDictionary<string, string> Arguments { get; set; }
+
     }
 
     public class SmartInfo

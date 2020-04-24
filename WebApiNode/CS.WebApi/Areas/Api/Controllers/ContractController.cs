@@ -108,7 +108,7 @@ namespace CS.WebApi.Areas.Api.Controllers
         //}
 
         [AuthKeyFilter]
-        [HttpPost("GetContractFromTransaction")]
+        [HttpPost("GetFromTransaction")]
         public ActionResult<TransactionInfo> GetContractFromTransaction(RequestGetterApiModel model)
         {
             InitAuthKey(model);
@@ -141,7 +141,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
 
         [AuthKeyFilter]
-        [HttpPost("GetContractByAddress")]
+        [HttpPost("GetByAddress")]
         public ActionResult<ResponseApiModel> GetContractByAddress(RequestKeyApiModel model)
         {
             InitAuthKey(model);
@@ -170,8 +170,32 @@ namespace CS.WebApi.Areas.Api.Controllers
             return Ok(res);
         }
 
+
         [AuthKeyFilter]
-        [HttpPost("ContractValidation")]
+        [HttpPost("GetMethods")]
+        public ActionResult<SmartContractMethodsModel> GetContractMethods(RequestKeyApiModel model)
+        {
+            InitAuthKey(model);
+
+            SmartContractMethodsModel res;
+            try
+            {
+                res = ServiceProvider.GetService<MonitorService>().GetContractMethods(model);
+
+                res.Success = true;
+            }
+            catch (Exception ex)
+            {
+                res = new SmartContractMethodsModel();
+                res.Success = false;
+                res.Message = ex.Message;
+            }
+
+            return Ok(res);
+        }
+
+        [AuthKeyFilter]
+        [HttpPost("Validate")]
         public ActionResult<ContractValidationResponse> ContractValidation(RequestContractValidationModel model)
         {
             InitAuthKey(model);
@@ -191,6 +215,34 @@ namespace CS.WebApi.Areas.Api.Controllers
             }
 
             return Ok(res);
+        }
+
+
+        [AuthKeyFilter]
+        [HttpPost("Execute")]
+        // [AuthKey]
+        /// <summary>
+        /// Выполнение транзакции. Которая предварительно уже была упакована отправлена
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public IActionResult Execute(RequestApiModel model)
+        {
+            // Нужна проверка валидности AuthKey - guid 
+
+            InitAuthKey(model);
+
+
+            var res = ServiceProvider.GetService<TransactionService>()
+                .ExecuteTransaction(model);
+
+
+
+            //TODO: запись в базу, для логов. Обработка ошибок. Согласовать стандарт.
+
+
+            res.FlowResult = null;
+            return new JsonResult(res);//"value";
         }
     }
 }

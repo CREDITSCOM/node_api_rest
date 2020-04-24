@@ -15,6 +15,8 @@ namespace CS.Service.RestApiNode
     {
         public IConfiguration Configuration { get; }
 
+        public decimal MinTransactionFee => 0.008740234375m;
+
         public TransactionService(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -95,17 +97,42 @@ namespace CS.Service.RestApiNode
                 {
                     if (model.Amount == 0)
                     {
-                        Decimal res;
-                        if (Decimal.TryParse(model.AmountAsString.Replace(",", "."), NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out res))
-                            transac.Amount = BCTransactionTools.GetAmountByDouble_C(res);
-                        else
-                            transac.Amount = BCTransactionTools.GetAmountByDouble_C(model.Amount);
+                        if (string.IsNullOrEmpty(model.AmountAsString))
+                        {
+                            transac.Amount = new Amount();
+                        }
+                        else {
+                            Decimal res;
+                            if (Decimal.TryParse(model.AmountAsString.Replace(",", "."), NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out res))
+                                transac.Amount = BCTransactionTools.GetAmountByDouble_C(res);
+                            else
+                                transac.Amount = BCTransactionTools.GetAmountByDouble_C(model.Amount);
+                        }
                     }
                     else
                     {
                         transac.Amount = BCTransactionTools.GetAmountByDouble_C(model.Amount);
                     }
 
+                    if (model.Fee == 0)
+                    {
+                        var minFee = MinTransactionFee;
+                        if (model.Amount - minFee >= 0.0M)
+                        {
+                            model.Fee = minFee;
+                            model.Amount = model.Amount - minFee;
+                            //GetActualFee(RequestFeeModel)
+                            //ServiceProvider.GetService<MonitorService>().GetBalance(model);
+
+                            transac.Fee = BCTransactionTools.EncodeFeeFromDouble(Convert.ToDouble(minFee));
+                            transac.Amount = BCTransactionTools.GetAmountByDouble_C(model.Amount);
+
+                        }
+                        else
+                        {
+                            throw new Exception("Fee is zero and couldn't be get from transaction sum");
+                        }
+                    }
                     transac.Target = SimpleBase.Base58.Bitcoin.Decode(model.ReceiverPublicKey).ToArray();
                 }
                 else if (model.MethodApi == ApiMethodConstant.SmartDeploy)
@@ -192,8 +219,9 @@ namespace CS.Service.RestApiNode
             return transac;
         }
 
-        public string PackTransactionByApiModel(RequestApiModel model)
+        public DataResponseApiModel PackTransactionByApiModel(RequestApiModel model)
         {
+            var res = new DataResponseApiModel();
             var transac = InitTransaction(model);
             byte[] byteData;
 
@@ -206,8 +234,9 @@ namespace CS.Service.RestApiNode
                 byteData = BCTransactionTools.CreateByteHashByTransactionDelegation(transac);
             }
 
-            var res = SimpleBase.Base58.Bitcoin.Encode(byteData);
-
+            res.TransactionPackagedStr = SimpleBase.Base58.Bitcoin.Encode(byteData);
+            res.RecommendedFee = model.Fee;
+            res.ActualSum = model.Amount;
             return res;
         }
 
@@ -251,7 +280,26 @@ namespace CS.Service.RestApiNode
                     response.Success = true;
                     response.TransactionInnerId = transac.Id;
                     if (result.Id != null)
+                    {
                         response.TransactionId = $"{result.Id.PoolSeq}.{result.Id.Index + 1}";
+                    }
+                    response.DataResponse.RecommendedFee = BCTransactionTools.GetDecimalByAmount(response.FlowResult.Fee);
+                    if (response.DataResponse.RecommendedFee == 0)
+                    {
+                        response.DataResponse.RecommendedFee = MinTransactionFee;
+                    }
+                    var sum = BCTransactionTools.GetDecimalByAmount(transac.Amount);
+                    if (sum > 0)
+                    {
+                        if (response.Amount == 0)
+                        {
+                            response.Amount = sum;
+                        }
+                        if(response.DataResponse.ActualSum == 0)
+                        {
+                            response.DataResponse.ActualSum = sum;
+                        }
+                    }
                 }
             }
 

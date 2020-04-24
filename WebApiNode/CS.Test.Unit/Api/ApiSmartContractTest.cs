@@ -38,7 +38,7 @@ namespace CS.Test.Unit.Api
                 foreach (var tokenParamsApiModel in methodParams)
                     model.TokenParams.Add(tokenParamsApiModel);
 
-            string message = service.PackTransactionByApiModel(model);
+            string message = service.PackTransactionByApiModel(model).TransactionPackagedStr;//changed to model
             Assert.IsNotNull(message);
 
             Rebex.Security.Cryptography.Ed25519 crypt = new Rebex.Security.Cryptography.Ed25519();

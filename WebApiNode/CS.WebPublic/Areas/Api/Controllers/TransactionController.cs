@@ -27,7 +27,7 @@ namespace CS.WebPublic.Areas.Api.Controllers
 
             res.DataResponse.TransactionPackagedStr = ServiceProvider
                 .GetService<TransactionService>()
-                .PackTransactionByApiModel(model);
+                .PackTransactionByApiModel(model).TransactionPackagedStr;//changed to model
             res.Success = true;
 
             return new JsonResult(res);//"value";
