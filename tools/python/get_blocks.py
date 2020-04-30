@@ -5,8 +5,8 @@ import json
 #url = 'http://apinode.credits.com/api/Monitor/GetWalletData/GetWalletData'
 #url =  'http://localhost:60476/api/Monitor/GetBlocks'
 #url =  'http://169.63.5.243:5006/api/Monitor/GetBlocks'
-url =  'http://localhost:8080/api/Monitor/GetBlocks'
-#url = 'http://165.22.212.105:5000/api/Monitor/GetBlocks'
+#url =  'http://localhost:8080/api/Monitor/GetBlocks'
+url = 'http://195.133.73.36:5010/api/Monitor/GetBlocks'
 
 headers = {
     'Content-type': 'application/json'
@@ -17,10 +17,10 @@ headers = {
 data = {
     "authKey": "87cbdd85-b2e0-4cb9-aebf-1fe87bf3afdd"
     #, "PublicKey":"5B3YXqDTcWQFGAqEJQJP3Bg1ZK8FFtHtgCiFLT5VAxpe"
-    #, "NetworkAlias":"MainNet"
+    , "NetworkAlias":"TestNet"
     #, "networkIp":"165.22.212.41"	# = TestNet
-    , "networkPort":"9070"         # executor
-    , "networkIp":"165.22.212.105"	# do6 mainnet
+    #, "networkPort":"9070"         # executor
+    #, "networkIp":"165.22.212.105"	# do6 mainnet
     #, "networkIp":"165.22.242.197"	# do-lon4 testnet
     #, "networkPort":"9070"
 	, "ConsensusInfo":True
@@ -28,8 +28,8 @@ data = {
 	#, "ContractsApproval":True
 	#, "Signatures":True
 	#, "Hashes":True
-	, "BeginSequence":29352978
-	, "EndSequence":29352988
+	, "BeginSequence":1
+	, "EndSequence":3
     }
 
 answer = requests.post(url, data=json.dumps(data), headers=headers)

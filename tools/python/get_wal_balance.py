@@ -3,7 +3,7 @@ import json
 
 #url = 'http://apinode.credits.com/api/Monitor/GetWalletData/Get'
 #url =  'http://localhost:60476/api/Monitor/GetBalance'
-url =  'http://169.63.5.243:5010/api/Monitor/GetBalance'
+url =  'http://195.133.73.36:5010/api/Monitor/GetBalance'
 
 headers = {
     'Content-type': 'application/json'
@@ -17,7 +17,7 @@ data = {
     #, "networkIp":"167.71.234.248"	# do19 mainnet
     #, "networkIp":"165.22.242.197"	# do-lon4 testnet
     #, "networkPort":"9070"
-	, "PublicKey": "FeFjpcsfHErXPk5HkfVcwH6zYaRT2xNytDTeSjfuVywt"
+	, "PublicKey": "ChUSzgs3yQuMqtT7k7YkJ5fKywR69jrRxCmbZbw51yZ9"
     }
 
 answer = requests.post(url, data=json.dumps(data), headers=headers)
