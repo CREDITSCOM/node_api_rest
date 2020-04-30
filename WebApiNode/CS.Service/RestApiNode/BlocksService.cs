@@ -33,6 +33,26 @@ namespace CS.Service.RestApiNode
             instance.RemoteNodePort = Parser.GetExecutorPort(request);
             instance.RequestTimeout = Parser.GetRequestTimeout(request);
 
+            const long MaxBlockRangeSize = 100L;
+            
+            if(request.BeginSequence == 0)
+            {
+                request.BeginSequence = request.EndSequence;
+            }
+            if(request.EndSequence == 0)
+            {
+                request.EndSequence = request.BeginSequence;
+            }
+
+            if (request.EndSequence > request.BeginSequence && request.EndSequence - request.BeginSequence >= MaxBlockRangeSize)
+            {
+                request.EndSequence = request.BeginSequence + MaxBlockRangeSize;
+            }
+            else if(request.BeginSequence > request.EndSequence && request.BeginSequence - request.EndSequence >= MaxBlockRangeSize)
+            {
+                request.EndSequence = request.BeginSequence - MaxBlockRangeSize;
+            }
+
             var blocks = instance.GetBlocksRange(request.BeginSequence, request.EndSequence);
          
             ResponseBlocksModel result = new ResponseBlocksModel();
