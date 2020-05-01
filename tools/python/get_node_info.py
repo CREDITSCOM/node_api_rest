@@ -4,7 +4,7 @@ import json
 #url = 'http://192.168.0.27:8888/api/Monitor/GetWalletData/GetWalletData'
 #url = 'http://apinode.credits.com/api/Monitor/GetWalletData/GetWalletData'
 url =  'http://localhost:60476/api/Monitor/GetNodeInfo'
-#url =  'http://169.63.5.243:5006/api/Monitor/GetBlocks'
+#url =  'http://195.133.73.36:5010/api/Monitor/GetBlocks'
 #url =  'http://localhost:60476/api/Monitor/GetWalletData'
 
 headers = {

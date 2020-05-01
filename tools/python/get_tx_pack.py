@@ -3,7 +3,7 @@ import json
 
 #url = 'http://apinode.credits.com/api/Monitor/GetWalletData/Get'
 #url =  'http://localhost:60476/api/Monitor/GetBalance'
-url =  'http://169.63.5.243:5010/api/Monitor/GetBalance'
+url =  'http://195.133.73.36:5010/api/PackTransaction'
 
 headers = {
     'Content-type': 'application/json'
