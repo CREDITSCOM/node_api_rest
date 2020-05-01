@@ -43,3 +43,5 @@ msbuild.wrn
 sample.json
 node_info.json
 wal_bal.json
+[Pp]ublish
+/tools/python/list_txs.json
