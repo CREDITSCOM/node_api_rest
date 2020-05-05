@@ -84,9 +84,9 @@ namespace CS.Service.RestApiNode.Models
 
     public class ShortTransactionInfo
     {
-        public Decimal Amount { get; set; }
+        public decimal Amount { get; set; }
         public UInt16 Currency { get; set; }
-         public Decimal Fee { get; set; }
+        public decimal Fee { get; set; }
         public string TransactionId { get; set; }
         /// <summary>
         /// Base58

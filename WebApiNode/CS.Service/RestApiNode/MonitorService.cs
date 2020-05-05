@@ -123,8 +123,12 @@ namespace CS.Service.RestApiNode
                         var newTr = new ShortTransactionInfo();
                         newTr.Amount = BCTransactionTools.GetDecimalByAmount(tr.Amount);
                         newTr.Currency = Convert.ToUInt16(tr.Currency);
-                        newTr.Fee = Convert.ToDecimal(Utils.ConvertCommission(tr.Fee.Commission));
-                        if(model.Flagg == "in")
+                        var feeStr = Utils.ConvertCommission(tr.Fee.Commission).Replace(",", ".");
+
+                        var style = NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands;
+                        newTr.Fee = Decimal.Parse(feeStr, style, CultureInfo.InvariantCulture);
+
+                        if (model.Flagg == "in")
                         {
                             newTr.Source = SimpleBase.Base58.Bitcoin.Encode(tr.Source);
                         }
