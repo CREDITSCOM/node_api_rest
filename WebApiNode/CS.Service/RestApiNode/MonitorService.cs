@@ -1,4 +1,5 @@
 ﻿using CS.Service.RestApiNode.Models;
+using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Globalization;
@@ -88,6 +89,64 @@ namespace CS.Service.RestApiNode
             return response;
         }
 
+
+        public FilteredTransactionsResponseModel GetFilteredTransactions(RequestFilteredListModel model)
+        {
+            var res = new FilteredTransactionsResponseModel();
+            using (var client = GetClientByModel(model))
+            {
+                var args = new API.FilteredTransactionsListGet_args();
+                args.GeneralQuery = new TransactionsQuery();
+                args.GeneralQuery.Flag = Convert.ToInt16((model.Flagg == "in") ? 1 : (model.Flagg == "out" ? 2 : 3));
+                args.GeneralQuery.Queries = new List<SingleQuery>();
+                foreach(var qry in model.Queries)
+                {
+                    //var nq = new SingleQuery();
+                    var sq = new SingleQuery();
+                    sq.FromId = BCTransactionTools.GetTransactionIdByStr(qry.FromId);
+                    sq.RequestedAddress = SimpleBase.Base58.Bitcoin.Decode(qry.Address).ToArray();
+                    args.GeneralQuery.Queries.Add(sq);
+                }
+
+                var qResult = client.FilteredTransactionsListGet(args.GeneralQuery);
+                if(model.Queries.Count() != qResult.QueryResponse.Count)
+                {
+                    throw new Exception("Query and response lists are not syncronized");
+                }
+
+                foreach(var qRep in qResult.QueryResponse)
+                {
+                    var qRes = new QueryResponseItem();
+                    qRes.QueryAddress = SimpleBase.Base58.Bitcoin.Encode(qRep.RequestedAddress);
+                    foreach(var tr in qRep.Transactions)
+                    {
+                        var newTr = new ShortTransactionInfo();
+                        newTr.Amount = BCTransactionTools.GetDecimalByAmount(tr.Amount);
+                        newTr.Currency = Convert.ToUInt16(tr.Currency);
+                        newTr.Fee = Convert.ToDecimal(Utils.ConvertCommission(tr.Fee.Commission));
+                        if(model.Flagg == "in")
+                        {
+                            newTr.Source = SimpleBase.Base58.Bitcoin.Encode(tr.Source);
+                        }
+                        else if (model.Flagg == "out")
+                        {
+                            newTr.Target = SimpleBase.Base58.Bitcoin.Encode(tr.Target);
+                        }
+                        else
+                        {
+                            newTr.Source = SimpleBase.Base58.Bitcoin.Encode(tr.Source);
+                            newTr.Target = SimpleBase.Base58.Bitcoin.Encode(tr.Target);
+                        }
+                        //newTr.TimeCreation = 
+                        newTr.TransactionId = Convert.ToString(tr.Id.PoolSeq) + "." + Convert.ToString(tr.Id.Index);
+                        //newTr.Type =
+                        qRes.Transactions.Add(newTr);
+                    }
+                    res.QuerieResponses.Add(qRes);
+                }
+            }
+            return res;
+        }
         public SmartSourceCode GetContractByAddress(RequestKeyApiModel model)
         {
             var response = new SmartSourceCode();

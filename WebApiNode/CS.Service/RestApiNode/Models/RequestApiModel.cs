@@ -67,62 +67,17 @@ namespace CS.Service.RestApiNode.Models
         public DateTimeOffset? DateExpired { get; set; }
     }
 
-    public class RequestTokensApiModel : RequestKeyApiModel
+    public class RequestFilteredListModel : AbstractRequestApiModel
     {
-        public string Tokens { get; set; }
+        public string Flagg { get; set; }
+
+        public IEnumerable<SingleQueryModel> Queries{ get; set; }
     }
 
-    public class RequestContractValidationModel : AbstractRequestApiModel
+    public class SingleQueryModel
     {
-        public string SourceString { get; set; }
+        public string Address { get; set; }
+        public string FromId { get; set; }
     }
-
-    public class RequestTransactionApiModel : RequestSourceCodeApiModel
-    {
-        public string TransactionId { get; set; }
-    }
-
-    public class RequestSourceCodeApiModel : AbstractRequestApiModel
-    {
-        public bool Compressed { get; set; }
-    }
-
-    public class RequestKeyApiModel : RequestSourceCodeApiModel
-    {
-        public string PublicKey { get; set; }
-    }
-
-    public class RequestTransactionsApiModel : RequestKeyApiModel
-    {
-        public long Offset { get; set; }
-        public long Limit { get; set; }
-    }
-
-
-    public class TokenParamsApiModel
-    {
-        public TokenParamsApiModel()
-        {
-            ValBool = null;
-            ValDouble = null;
-            ValInt = null;
-            ValString = null;
-        }
-
-        public string Name { get; set; }
-
-
-        public Double? ValDouble { get; set; }
-
-        public string ValString { get; set; }
-
-        public bool? ValBool { get; set; }
-
-        public int? ValInt { get; set; }
-
-
-    }
-
-
 
 }

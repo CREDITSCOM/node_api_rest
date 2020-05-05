@@ -149,6 +149,26 @@ namespace CS.WebApi.Areas.Api.Controllers
             return Ok(res);
         }
 
+
+        [AuthKeyFilter]
+        [HttpPost("GetFilteredTransactionsList")]
+        public ActionResult<FilteredTransactionsResponseModel> GetFilteredTransactionsList(RequestFilteredListModel model)
+        {
+            var response = new FilteredTransactionsResponseModel();
+            try
+            {
+                response = ServiceProvider.GetService<MonitorService>().GetFilteredTransactions(model);
+
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         //[AuthKeyFilter]
         //[HttpPost("GetWalletTransactions")]
         //public ActionResult<ResponseApiModel> GetWalletTransactions(RequestKeyApiModel model)

@@ -5,14 +5,6 @@ using System.Text;
 namespace CS.Service.RestApiNode.Models
 {
 
-    public class AbstractResponseApiModel
-    {
-        public bool Success { get; set; }
-
-        public string Message { get; set; }
-
-    }
-
     public partial class ResponseApiModel : AbstractResponseApiModel
     {
         public ResponseApiModel()
@@ -38,120 +30,6 @@ namespace CS.Service.RestApiNode.Models
 
         public string TransactionId { get; set; }
 
-
-    }
-
-
-    public partial class WalletDataResponseApiModel : AbstractResponseApiModel
-    {
-        public WalletDataResponseApiModel()
-        {
-            Delegated = new DelegatedStructure();
-        }
-        public Decimal Balance { get; set; }
-
-        public long LastTransaction { get; set; }
-
-        public DelegatedStructure Delegated { get; set; }
-
-        public string MessageError { get; set; }
-    }
-
-    public partial class WalletTransactionsResponseApiModel : AbstractResponseApiModel
-    {
-        public WalletTransactionsResponseApiModel()
-        {
-            Transactions = new List<TransactionApiModel>();
-        }
-
-        public ICollection<TransactionApiModel> Transactions { get; set; }
-
-
-    }
-
-    public partial class TransactionApiModel
-    {
-        public string Id { get; set; }
-        public string FromAccount { get; set; }
-        public string ToAccount { get; set; }
-        public DateTime Time { get; set; }
-        public string Sum { get; set; }
-        public string Fee { get; set; }
-        public string Currency { get; set; }
-        public long InnerId { get; set; }
-        public string Type { get; set; }
-        public string Status { get; set; }
-    }
-
-
-    public partial class DelegatedStructure
-    {
-        public DelegatedStructure()
-        {
-            Donors = new List<DelegatedInfo>();
-            Recipients = new List<DelegatedInfo>();
-        }
-        public Decimal Incoming { get; set; }
-
-        public Decimal Outgoing { get; set; }
-
-        public ICollection<DelegatedInfo> Donors { get; set; }
-
-        public ICollection<DelegatedInfo> Recipients { get; set; }
-    }
-
-
-    public partial class DelegatedInfo
-    {
-        public string PublicKey { get; set; }
-
-        public Decimal Sum { get; set; }
-
-        public long ValidUntil { get; set; }
-    }
-    /// <summary>
-    /// Модель одиночный элемент
-    /// </summary>
-    public class DataResponseApiModel
-    {
-        public string PublicKey { get; set; }
-
-        /// <summary>
-        /// Base58
-        /// </summary>
-        public string TransactionPackagedStr { get; set; }
-
-        public Decimal ActualSum { get; set; }
-        public Decimal RecommendedFee { get; set; }
-    }
-
-    public class BalanceResponseApiModel : AbstractResponseApiModel
-    {
-        public BalanceResponseApiModel()
-        {
-            Tokens = new List<Token>();
-        }
-
-        public Decimal Balance { get; set; }
-
-
-        public ICollection<Token> Tokens { get; set; }
-
-
-        public Decimal DelegatedOut { get; set; }
-
-        public Decimal DelegatedIn { get; set; }
-
-    }
-
-    public class TokensResponseApiModel : AbstractResponseApiModel
-    {
-        public TokensResponseApiModel()
-        {
-            Tokens = new List<Token>();
-        }
-
-        public ICollection<Token> Tokens { get; set; }
 
     }
 
@@ -184,7 +62,43 @@ namespace CS.Service.RestApiNode.Models
 
     }
 
+    public class FilteredTransactionsResponseModel : AbstractResponseApiModel
+    {
+        public FilteredTransactionsResponseModel()
+        {
+            QuerieResponses = new List<QueryResponseItem>();
+        }
 
+        public ICollection<QueryResponseItem> QuerieResponses { get; set; }
+    }
+    public class QueryResponseItem
+    {
+        public QueryResponseItem()
+        {
+            Transactions = new List<ShortTransactionInfo>();
+        }
+        public string QueryAddress { get; set; }
+
+        public ICollection<ShortTransactionInfo> Transactions { get; set; }
+    }
+
+    public class ShortTransactionInfo
+    {
+        public Decimal Amount { get; set; }
+        public UInt16 Currency { get; set; }
+         public Decimal Fee { get; set; }
+        public string TransactionId { get; set; }
+        /// <summary>
+        /// Base58
+        /// </summary>
+        public string Source { get; set; }
+        /// <summary>
+        /// Base58
+        /// </summary>
+        public string Target { get; set; }
+        public DateTime TimeCreation { get; set; }
+        public Byte Type { get; set; }
+}
     public class TransactionInfo : AbstractResponseApiModel
     {
         public string Id { get; set; }
