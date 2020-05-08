@@ -45,3 +45,4 @@ sample.json
 node_info.json
 wal_bal.json
 tools/python/list_txs.json
+*.db
