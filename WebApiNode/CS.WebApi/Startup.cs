@@ -29,7 +29,7 @@ namespace CS.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<AppDbContext>(opts => opts.UseSqlServer(Configuration["ConnectionStrings:default"]));
+            services.AddDbContext<AppDbContext>(opts => opts.UseSqlite(Configuration["ConnectionStrings:sqlitedb"]));
             services.AddSingleton(opt => new TransactionService(Configuration));
             services.AddSingleton(opt => new MonitorService(Configuration));
             services.AddSingleton(typeof(NodeAPIClient.Services.NodeInfoService));
