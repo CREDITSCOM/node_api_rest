@@ -17,19 +17,20 @@ headers = {
 data = {
     "authKey": "87cbdd85-b2e0-4cb9-aebf-1fe87bf3afdd"
     #, "PublicKey":"5B3YXqDTcWQFGAqEJQJP3Bg1ZK8FFtHtgCiFLT5VAxpe"
-    , "NetworkAlias":"TestNet"
+    #, "NetworkAlias":"TestNet"
     #, "networkIp":"165.22.212.41"	# = TestNet
     #, "networkPort":"9070"         # executor
     #, "networkIp":"165.22.212.105"	# do6 mainnet
-    #, "networkIp":"165.22.242.197"	# do-lon4 testnet
-    #, "networkPort":"9070"
+    #, "networkIp":"157.245.109.215"	# do-14
+    , "networkIp":"167.86.121.20"	# co-4
+    , "networkPort":"9070"
 	, "ConsensusInfo":True
-	, "Transactions":False
+	#, "Transactions":False
 	#, "ContractsApproval":True
 	#, "Signatures":True
-	#, "Hashes":True
-	, "BeginSequence":1
-	, "EndSequence":3
+	, "Hashes":True
+	, "BeginSequence":33422272
+	, "EndSequence":33422272
     }
 
 answer = requests.post(url, data=json.dumps(data), headers=headers)
