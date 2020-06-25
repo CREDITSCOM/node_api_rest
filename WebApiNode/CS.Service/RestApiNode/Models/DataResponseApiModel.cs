@@ -4,10 +4,10 @@ using System.Text;
 
 namespace CS.Service.RestApiNode.Models
 {
-
     /// <summary>
     /// Модель одиночный элемент
     /// </summary>
+
     public class DataResponseApiModel
     {
         public string PublicKey { get; set; }

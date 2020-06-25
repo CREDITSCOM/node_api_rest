@@ -295,11 +295,35 @@ namespace CS.Service.RestApiNode
                         {
                             response.Amount = sum;
                         }
-                        if(response.DataResponse.ActualSum == 0)
+                        if(response.ActualSum == 0)
                         {
-                            response.DataResponse.ActualSum = sum;
+                            response.ActualSum = sum;
                         }
                     }
+                    //TODO: extract fee from node
+                    if(result.Fee != null)
+                    {
+                        response.ActualFee = BCTransactionTools.GetDecimalByAmount(result.Fee);
+                        if(response.ActualFee == 0M)
+                        {
+                            response.ActualFee = MinTransactionFee;
+                        }
+                    }
+
+                    if(result.ExtraFee != null)
+                    {
+                        response.ExtraFee = new List<EFeeItem>();
+                        foreach(var eFee in result.ExtraFee)
+                        {
+                            var feeSum = BCTransactionTools.GetDecimalByAmount(eFee.Sum);
+                            response.ExtraFee.Add(new EFeeItem()
+                            {
+                                Fee = feeSum,
+                                Comment = eFee.Comment
+                            });
+                        }
+                    }
+
                 }
             }
 

@@ -4,7 +4,12 @@ using System.Text;
 
 namespace CS.Service.RestApiNode.Models
 {
+    public class EFeeItem
+    {
+        public decimal Fee { get; set; }
 
+        public string Comment { get; set; }
+    }
     public partial class ResponseApiModel : AbstractResponseApiModel
     {
         public ResponseApiModel()
@@ -18,6 +23,11 @@ namespace CS.Service.RestApiNode.Models
         public Decimal Amount { get; set; }
 
         public DataResponseApiModel DataResponse { get; set; }
+
+        public Decimal ActualSum { get; set; }
+        public Decimal ActualFee { get; set; }
+
+        public List<EFeeItem> ExtraFee { get; set; }
 
 
         public ICollection<ItemListApiModel> ListItem { get; set; }
@@ -76,10 +86,26 @@ namespace CS.Service.RestApiNode.Models
         public QueryResponseItem()
         {
             Transactions = new List<ShortTransactionInfo>();
+            TransfersList = new List<QueryTokenResponseItem> ();
         }
         public string QueryAddress { get; set; }
 
         public ICollection<ShortTransactionInfo> Transactions { get; set; }
+
+        public ICollection<QueryTokenResponseItem> TransfersList { get; set; }
+    }
+
+    public class QueryTokenResponseItem
+    {
+        public QueryTokenResponseItem()
+        {
+            Transfers = new List<TokenTransferInfo>();
+        }
+        public string TokenAddress { get; set; }
+        public string TokenName { get; set; }
+        public string TokenTiker { get; set; }
+
+        public ICollection<TokenTransferInfo> Transfers { get; set; }
     }
 
     public class ShortTransactionInfo
@@ -98,7 +124,27 @@ namespace CS.Service.RestApiNode.Models
         public string Target { get; set; }
         public DateTime TimeCreation { get; set; }
         public Byte Type { get; set; }
-}
+    }
+
+    public class TokenTransferInfo
+    {
+        public string TokenAddress { get; set; }
+
+        public string TokenCode { get; set; }
+
+        public string Sender { get; set; }
+
+        public string Receiver { get; set; }
+
+        public Decimal TokenAmount { get; set; }
+
+        public string TransferInitiator { get; set; }
+
+        public string TransactionID { get; set; }
+
+        public DateTime TimeCreation { get; set; }
+    }
+
     public class TransactionInfo : AbstractResponseApiModel
     {
         public string Id { get; set; }

@@ -103,13 +103,24 @@ namespace CS.Service.RestApiNode
                 {
                     //var nq = new SingleQuery();
                     var sq = new SingleQuery();
-                    sq.FromId = BCTransactionTools.GetTransactionIdByStr(qry.FromId);
+                    sq.FromId = BCTransactionTools.GetTransactionIdByStr(qry.FromId == null ? "0.0" : qry.FromId);
                     sq.RequestedAddress = SimpleBase.Base58.Bitcoin.Decode(qry.Address).ToArray();
+                    if (qry.TokenQueries != null)
+                    {
+                        sq.TokensList = new List<SingleTokenQuery>();
+                        foreach (var tokenReq in qry.TokenQueries)
+                        {
+                            var sqt = new SingleTokenQuery();
+                            sqt.FromId = BCTransactionTools.GetTransactionIdByStr(tokenReq.FromId);
+                            sqt.TokenAddress = SimpleBase.Base58.Bitcoin.Decode(tokenReq.TokenAddress).ToArray();
+                            sq.TokensList.Add(sqt);
+                        }
+                    }
                     args.GeneralQuery.Queries.Add(sq);
                 }
 
                 var qResult = client.FilteredTransactionsListGet(args.GeneralQuery);
-                if(model.Queries.Count() != qResult.QueryResponse.Count)
+                if(model.Queries.Count() < qResult.QueryResponse.Count)
                 {
                     throw new Exception("Query and response lists are not syncronized");
                 }
@@ -141,11 +152,39 @@ namespace CS.Service.RestApiNode
                             newTr.Source = SimpleBase.Base58.Bitcoin.Encode(tr.Source);
                             newTr.Target = SimpleBase.Base58.Bitcoin.Encode(tr.Target);
                         }
-                        //newTr.TimeCreation = 
+                        newTr.TimeCreation = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(tr.TimeCreation / 1000);
                         newTr.TransactionId = Convert.ToString(tr.Id.PoolSeq) + "." + Convert.ToString(tr.Id.Index);
-                        //newTr.Type =
+                        newTr.Type = Convert.ToByte(tr.Type);
                         qRes.Transactions.Add(newTr);
                     }
+                    if(qRep.TransfersList != null)
+                    {
+                        foreach(var tokenResp in qRep.TransfersList)
+                        {
+                            var SingleTokenResponse = new QueryTokenResponseItem();
+                            SingleTokenResponse.TokenAddress = SimpleBase.Base58.Bitcoin.Encode(tokenResp.TokenAddress);
+                            SingleTokenResponse.TokenName = tokenResp.TokenName;
+                            SingleTokenResponse.TokenTiker = tokenResp.TokenTiker;
+                            if (tokenResp.Transfers != null)
+                            {
+                                foreach (var singleTokenTransfer in tokenResp.Transfers)
+                                {
+                                    var singleTokenTransferResult = new TokenTransferInfo();
+                                    singleTokenTransferResult.TokenAddress = SimpleBase.Base58.Bitcoin.Encode(singleTokenTransfer.Token);
+                                    singleTokenTransferResult.Sender = SimpleBase.Base58.Bitcoin.Encode(singleTokenTransfer.Sender);
+                                    singleTokenTransferResult.Receiver = SimpleBase.Base58.Bitcoin.Encode(singleTokenTransfer.Receiver);
+                                    singleTokenTransferResult.TransferInitiator = SimpleBase.Base58.Bitcoin.Encode(singleTokenTransfer.Initiator);
+                                    singleTokenTransferResult.TokenCode = singleTokenTransfer.Code;
+                                    singleTokenTransferResult.TokenAmount = Convert.ToDecimal(singleTokenTransfer.Amount, CultureInfo.InvariantCulture);
+                                    singleTokenTransferResult.TransactionID = Convert.ToString(singleTokenTransfer.Transaction.PoolSeq) + "." + Convert.ToString(singleTokenTransfer.Transaction.Index);
+                                    //singleTokenTransferResult.TimeCreation = singleTorenTransfer.Time;
+                                    SingleTokenResponse.Transfers.Add(singleTokenTransferResult);
+                                }
+                                qRes.TransfersList.Add(SingleTokenResponse);
+                            }
+                        }
+                    }
+
                     res.QuerieResponses.Add(qRes);
                 }
             }

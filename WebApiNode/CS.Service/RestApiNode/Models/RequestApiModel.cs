@@ -74,10 +74,18 @@ namespace CS.Service.RestApiNode.Models
         public IEnumerable<SingleQueryModel> Queries{ get; set; }
     }
 
+    public class SingleTokenQueryModel
+    {
+        public string TokenAddress { get; set; }
+        public string FromId { get; set; } 
+    }
+
     public class SingleQueryModel
     {
         public string Address { get; set; }
         public string FromId { get; set; }
+
+        public IEnumerable<SingleTokenQueryModel> TokenQueries { get; set; }
     }
 
 }
