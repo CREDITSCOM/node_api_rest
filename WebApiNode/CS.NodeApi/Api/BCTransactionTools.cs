@@ -256,8 +256,15 @@ namespace CS.NodeApi.Api
 
             if (transac.SmartContract != null)
             {
+                if (transac.UserFields == null)
+                {
+                    result = result.Concat(new Byte[1] { 1 });
+                }
+                else
+                {
+                    result = result.Concat(new Byte[1] { 2 });
+                }
 
-                result = result.Concat(new Byte[1] { 1 });
 
                 IEnumerable<Byte> arr1 = new byte[3] { 11, 0, 1 };
 
@@ -394,13 +401,6 @@ namespace CS.NodeApi.Api
 
 
             }
-            else if (transac.UserFields != null)
-            {
-                result = result.Concat(new byte[1] { 1 });
-                result = result.Concat(BitConverter.GetBytes(transac.UserFields.Length));
-                result = result.Concat(transac.UserFields);
-
-            }
             else if (transac.UsedContracts != null)
             {
                 result = result.Concat(new byte[1] { 1 });
@@ -422,8 +422,21 @@ namespace CS.NodeApi.Api
             }
             else
             {
-                result = result.Concat(new Byte[1]);
-                //    result = result.Concat(new byte[1] { 1 });
+                if (transac.UserFields != null)
+                {
+                    result = result.Concat(new byte[1] { 1 });
+                }
+                else
+                {
+                    result = result.Concat(new Byte[1]);
+                }
+            }
+            if (transac.UserFields != null)
+            {
+                //result = result.Concat(new byte[1] { 1 });
+                result = result.Concat(BitConverter.GetBytes(transac.UserFields.Length));
+                result = result.Concat(transac.UserFields);
+
             }
 
             var res = result.ToArray();

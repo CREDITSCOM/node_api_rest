@@ -155,6 +155,7 @@ namespace CS.Service.RestApiNode
                         newTr.TimeCreation = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(tr.TimeCreation / 1000);
                         newTr.TransactionId = Convert.ToString(tr.Id.PoolSeq) + "." + Convert.ToString(tr.Id.Index);
                         newTr.Type = Convert.ToByte(tr.Type);
+                        newTr.UserData = SimpleBase.Base58.Bitcoin.Encode(tr.UserFields);
                         qRes.Transactions.Add(newTr);
                     }
                     if(qRep.TransfersList != null)
@@ -177,7 +178,23 @@ namespace CS.Service.RestApiNode
                                     singleTokenTransferResult.TokenCode = singleTokenTransfer.Code;
                                     singleTokenTransferResult.TokenAmount = Convert.ToDecimal(singleTokenTransfer.Amount, CultureInfo.InvariantCulture);
                                     singleTokenTransferResult.TransactionID = Convert.ToString(singleTokenTransfer.Transaction.PoolSeq) + "." + Convert.ToString(singleTokenTransfer.Transaction.Index);
-                                    //singleTokenTransferResult.TimeCreation = singleTorenTransfer.Time;
+                                    singleTokenTransferResult.TimeCreation = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddSeconds(singleTokenTransfer.Time / 1000);
+                                    singleTokenTransferResult.UserData = SimpleBase.Base58.Bitcoin.Encode(singleTokenTransfer.UserFields);
+                                    if(singleTokenTransfer.Fee != null)
+                                    {
+                                        singleTokenTransferResult.Fee = Convert.ToDecimal(Utils.FeeByIndex(singleTokenTransfer.Fee.Commission), CultureInfo.InvariantCulture);
+
+                                    }
+                                    if (singleTokenTransfer.ExtraFee != null)
+                                    {
+                                        foreach (var it in singleTokenTransfer.ExtraFee)
+                                        {
+                                            var item = new EFeeItem();
+                                            item.Fee = Convert.ToDecimal(FormatAmount(it.Sum), CultureInfo.InvariantCulture);
+                                            item.Comment = it.Comment;
+                                            singleTokenTransferResult.ExtraFee.Add(item);
+                                        }
+                                    }
                                     SingleTokenResponse.Transfers.Add(singleTokenTransferResult);
                                 }
                                 qRes.TransfersList.Add(SingleTokenResponse);
@@ -329,21 +346,27 @@ namespace CS.Service.RestApiNode
                 if (result.WalletData.Delegated != null) {
                     dStr.Incoming = BCTransactionTools.GetDecimalByAmount(result.WalletData.Delegated.Incoming);
                     dStr.Outgoing = BCTransactionTools.GetDecimalByAmount(result.WalletData.Delegated.Outgoing);
-                    foreach (var it in result.WalletData.Delegated.Donors)
+                    if(result.WalletData.Delegated.Donors != null)
                     {
-                        var item = new DelegatedInfo();
-                        item.PublicKey = SimpleBase.Base58.Bitcoin.Encode(it.Wallet);
-                        item.Sum = BCTransactionTools.GetDecimalByAmount(it.Sum);
-                        item.ValidUntil = it.ValidUntil;
-                        dStr.Donors.Add(item);
+                        foreach (var it in result.WalletData.Delegated.Donors)
+                        {
+                            var item = new DelegatedInfo();
+                            item.PublicKey = SimpleBase.Base58.Bitcoin.Encode(it.Wallet);
+                            item.Sum = BCTransactionTools.GetDecimalByAmount(it.Sum);
+                            item.ValidUntil = it.ValidUntil;
+                            dStr.Donors.Add(item);
+                        }
                     }
-                    foreach (var it in result.WalletData.Delegated.Recipients)
+                    if (result.WalletData.Delegated.Recipients != null)
                     {
-                        var item = new DelegatedInfo();
-                        item.PublicKey = SimpleBase.Base58.Bitcoin.Encode(it.Wallet);
-                        item.Sum = BCTransactionTools.GetDecimalByAmount(it.Sum);
-                        item.ValidUntil = it.ValidUntil;
-                        dStr.Recipients.Add(item);
+                        foreach (var it in result.WalletData.Delegated.Recipients)
+                        {
+                            var item = new DelegatedInfo();
+                            item.PublicKey = SimpleBase.Base58.Bitcoin.Encode(it.Wallet);
+                            item.Sum = BCTransactionTools.GetDecimalByAmount(it.Sum);
+                            item.ValidUntil = it.ValidUntil;
+                            dStr.Recipients.Add(item);
+                        }
                     }
                 }
                 response.Delegated = dStr;

@@ -258,9 +258,9 @@ namespace CS.Service.RestApiNode
                 var transac = InitTransaction(request);
                 transac.Signature = SimpleBase.Base58.Bitcoin.Decode(request.TransactionSignature).ToArray();
 
-                if (request.DelegateEnable)
+                if (request.DelegateEnable && !request.DelegateDisable)
                     transac.UserFields = new byte[15] { 0, 1, 5, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 };
-                else if (request.DelegateDisable)
+                else if (request.DelegateDisable && !request.DelegateEnable)
                     transac.UserFields = new byte[15] { 0, 1, 5, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0 };
 
                 TransactionFlowResult result = client.TransactionFlow(transac);

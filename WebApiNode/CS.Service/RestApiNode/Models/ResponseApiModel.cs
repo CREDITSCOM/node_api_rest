@@ -124,10 +124,15 @@ namespace CS.Service.RestApiNode.Models
         public string Target { get; set; }
         public DateTime TimeCreation { get; set; }
         public Byte Type { get; set; }
+        public string UserData { get; set; }
     }
 
     public class TokenTransferInfo
     {
+        public TokenTransferInfo()
+        {
+            ExtraFee = new List<EFeeItem>();
+        }
         public string TokenAddress { get; set; }
 
         public string TokenCode { get; set; }
@@ -138,11 +143,17 @@ namespace CS.Service.RestApiNode.Models
 
         public Decimal TokenAmount { get; set; }
 
+        public decimal Fee { get; set; }
+
+        public List<EFeeItem> ExtraFee { get; set; }
+
         public string TransferInitiator { get; set; }
 
         public string TransactionID { get; set; }
 
         public DateTime TimeCreation { get; set; }
+
+        public string UserData { get; set; }
     }
 
     public class TransactionInfo : AbstractResponseApiModel
