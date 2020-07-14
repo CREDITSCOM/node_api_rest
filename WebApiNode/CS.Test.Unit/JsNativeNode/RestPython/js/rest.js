@@ -17,7 +17,7 @@
 
 
         let result = {};
-        let _url = new URL(`${this.UrlRest}/balance`);
+        let _url = new URL(`${this.UrlRest}/getbalance`);
         let params = { wallet: key };
         Object
             .keys(params)

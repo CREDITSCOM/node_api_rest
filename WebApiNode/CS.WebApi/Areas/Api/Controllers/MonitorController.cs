@@ -19,6 +19,22 @@ namespace CS.WebApi.Areas.Api.Controllers
             this.serviceProvider = serviceProvider;
         }
 
+        private BadRequestObjectResult IsModelValid<TResult>(RequestKeyApiModel model) where TResult : AbstractResponseApiModel, new()
+        {
+            string msg = "";
+            if (model == null || !ModelState.IsValid)
+                msg = "Model is not valid";
+
+            if (string.IsNullOrWhiteSpace(model.PublicKey))
+                msg = "Public Key is empty or not valid";
+
+            return msg.Length != 0 ? BadRequest(new TResult
+            {
+                Success = false,
+                Message = msg
+            }) : null;
+        }
+
         [AuthKeyFilter]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -27,14 +43,8 @@ namespace CS.WebApi.Areas.Api.Controllers
         {
             try
             {
-                if (model == null || !ModelState.IsValid)
-                {
-                    return BadRequest(new BalanceResponseApiModel
-                    {
-                        Success = false,
-                        Message = "Model is not valid"
-                    });
-                }
+                if(IsModelValid<BalanceResponseApiModel>(model) is var valid && valid != null)
+                    return valid;
 
                 InitAuthKey(model);
 
@@ -61,14 +71,8 @@ namespace CS.WebApi.Areas.Api.Controllers
         {
             try
             {
-                if (model == null || !ModelState.IsValid)
-                {
-                    return BadRequest(new WalletDataResponseApiModel()
-                    {
-                        Success = false,
-                        MessageError = "Model is not valid"
-                    });
-                }
+                if (IsModelValid<ResponseApiModel>(model) is var valid && valid != null)
+                    return valid;
 
                 InitAuthKey(model);
 
@@ -96,14 +100,8 @@ namespace CS.WebApi.Areas.Api.Controllers
         {
             try
             {
-                if (model == null || !ModelState.IsValid)
-                {
-                    return BadRequest(new ResponseApiModel()
-                    {
-                        Success = false,
-                        Message = "Model is not valid"
-                    });
-                }
+                if (IsModelValid<ResponseApiModel>(model) is var valid && valid != null)
+                    return valid;
 
                 InitAuthKey(model);
 
@@ -184,14 +182,8 @@ namespace CS.WebApi.Areas.Api.Controllers
         {
             try
             {
-                if (model == null || !ModelState.IsValid)
-                {
-                    return BadRequest(new WalletTransactionsResponseApiModel()
-                    {
-                        Success = false,
-                        Message = "Model is not valid"
-                    });
-                }
+                if (IsModelValid<WalletTransactionsResponseApiModel>(model) is var valid && valid != null)
+                    return valid;
 
                 InitAuthKey(model);
 
