@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CS.Service.RestApiNode.Models
+﻿namespace CS.Service.RestApiNode.Models
 {
-    public class ResponseBlocksModel
+    public class ResponseBlocksModel : AbstractResponseApiModel
     {
-        public bool Success { get; set; }
-
-        public string Message { get; set; }
     }
-
 }

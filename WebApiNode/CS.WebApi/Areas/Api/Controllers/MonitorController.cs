@@ -210,14 +210,8 @@ namespace CS.WebApi.Areas.Api.Controllers
         {
             try
             {
-                if (model == null || !ModelState.IsValid)
-                {
-                    return BadRequest(new TokensResponseApiModel()
-                    {
-                        Success = false,
-                        Message = "Model is not valid"
-                    });
-                }
+                if (IsModelValid<TokensResponseApiModel>(model) is var valid && valid != null)
+                    return valid;
 
                 InitAuthKey(model);
 
@@ -410,11 +404,10 @@ namespace CS.WebApi.Areas.Api.Controllers
                 InitAuthKey(model);
 
                 var json = serviceProvider.GetService<BlocksService>().GetBlocksRange(model);
-                return new ContentResult()
+                return new ResponseBlocksModel()
                 {
-                    Content = json,
-                    ContentType = "application/json",
-                    StatusCode = 200
+                    Success = true,
+                    Message = json
                 };
             }
             catch (Exception ex)
