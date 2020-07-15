@@ -1,33 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using CS.Service.RestApiNode.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Ocsp;
 
 namespace CS.Test.Unit.Api
 {
     [TestClass]
-    public class WebApiHttpTest
+    public class WebApiMonitorHttpTest
     {
         private static string baseUrl = "http://localhost:60476/api/monitor/";
 
         private class BaseNet
         {
-            public static string NetworkAlias = "TestNet";
-            public static string NetworkIp = "68.183.230.109";
-            public static string NetworkPort = "9090";
+            public static string NetworkAlias { get; set; }
+            
+            public static string NetworkIp { get; set; }
+            
+            public static string NetworkPort { get; set; }
+            
+            public static string PublicKey { get; set; }
+
+            public static long Limit { get; set; }
+            
+            public static long Offset { get; set; }
         }
+
+        private class TestNetRemoteNet : BaseNet
+        {
+            public TestNetRemoteNet()
+            {
+                NetworkAlias = "TestNet";
+                NetworkIp = "68.183.230.109";
+                NetworkPort = "9090";
+                PublicKey = "JfFyPGxxN7ygUNfM5if5TfGmjGuJ1BaZqrGsTKPsWnZ";
+                Limit = 1000;
+                Offset = 0;
+            }   
+        }
+
+        private TestNetRemoteNet testNetRemoteNet = new TestNetRemoteNet();
 
         private RequestKeyApiModel requestKeyApi = new RequestKeyApiModel()
         {
             NetworkAlias = BaseNet.NetworkAlias,
             NetworkIp = BaseNet.NetworkIp,
             NetworkPort = BaseNet.NetworkPort,
-            PublicKey = "JfFyPGxxN7ygUNfM5if5TfGmjGuJ1BaZqrGsTKPsWnZ"
+            PublicKey = BaseNet.PublicKey
         };
 
         private RequestTransactionApiModel requestTranApi = new RequestTransactionApiModel()
@@ -42,9 +63,9 @@ namespace CS.Test.Unit.Api
             NetworkAlias = BaseNet.NetworkAlias,
             NetworkIp = BaseNet.NetworkIp,
             NetworkPort = BaseNet.NetworkPort,
-            PublicKey = "JfFyPGxxN7ygUNfM5if5TfGmjGuJ1BaZqrGsTKPsWnZ",
-            Limit = 1000,
-            Offset = 0
+            PublicKey = BaseNet.PublicKey,
+            Limit = BaseNet.Limit,
+            Offset = BaseNet.Offset
         };
 
         private RequestFilteredListModel requestFilterApi = new RequestFilteredListModel()
@@ -60,7 +81,7 @@ namespace CS.Test.Unit.Api
             NetworkAlias = BaseNet.NetworkAlias,
             NetworkIp = BaseNet.NetworkIp,
             NetworkPort = BaseNet.NetworkPort,
-            PublicKey = "JfFyPGxxN7ygUNfM5if5TfGmjGuJ1BaZqrGsTKPsWnZ"
+            PublicKey = BaseNet.PublicKey
         };
 
         private RequestGetterApiModel requestGetterApi = new RequestGetterApiModel()
