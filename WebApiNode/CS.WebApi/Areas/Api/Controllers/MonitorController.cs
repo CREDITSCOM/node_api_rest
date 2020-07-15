@@ -86,7 +86,7 @@ namespace CS.WebApi.Areas.Api.Controllers
                 return BadRequest(new WalletDataResponseApiModel()
                 {
                     Success = false,
-                    MessageError = ex.Message
+                    Message = ex.Message
                 });
             }
         }
@@ -460,10 +460,14 @@ namespace CS.WebApi.Areas.Api.Controllers
                     });
                 }
 
-                var result = svc.GetNodeInfo(config.GetNetworkIp(model), config.GetDiagnosticPort(model), config.GetRequestTimeout(model));
-                if (result != null)
+                var nodeInfo = svc.GetNodeInfo(config.GetNetworkIp(model), config.GetDiagnosticPort(model), config.GetRequestTimeout(model));
+                if (nodeInfo != null)
                 {
-                    return Ok(result);
+                    return Ok(new ResponseNodeInfoModel() 
+                    {
+                        Success = true,
+                        NodeInfo = nodeInfo
+                    });
                 }
 
                 return BadRequest(new ResponseNodeInfoModel()
