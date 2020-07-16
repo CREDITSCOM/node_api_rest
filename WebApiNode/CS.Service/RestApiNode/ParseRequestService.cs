@@ -1,8 +1,5 @@
 ﻿using CS.Service.RestApiNode.Models;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CS.Service.RestApiNode
 {
@@ -84,11 +81,15 @@ namespace CS.Service.RestApiNode
             }
             return port;
         }
-
+        
         int ServerNum => 1;
+        
         ushort DefaultPublicPort => 9090;
+        
         ushort DefaultExecutorPort => 9070;
+        
         ushort DefaultDiagnosticPort => 9088;
+        
         int DefaultTimeout => 60000;
     }
 }

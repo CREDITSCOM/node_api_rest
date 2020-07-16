@@ -1,5 +1,4 @@
-﻿using CS.Service.Monitor;
-using CS.Service.RestApiNode.Models;
+﻿using CS.Service.RestApiNode.Models;
 using NodeApi;
 using System;
 
@@ -54,11 +53,8 @@ namespace CS.Service.RestApiNode
                 }
             }
 
-
-
             return tInfo;
         }
-
 
         public TransactionApiModel ApiToShorttransaction(SealedTransaction tr)
         {
@@ -80,12 +76,10 @@ namespace CS.Service.RestApiNode
             return wtr;
         }
 
-
         private static string GetTxId(TransactionId id)
         {
             return id == null ? null : $"{id.PoolSeq}.{id.Index + 1}";
         }
-
 
         public static string FormatAmount(Amount value)
         {

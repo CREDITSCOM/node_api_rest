@@ -26,7 +26,6 @@ namespace CS.Service.RestApiNode
         /// <param name="request">    The request model. </param>
         ///
         /// <returns>   The blocks range serialized into JSON string. </returns>
-
         public string GetBlocksRange(RequestBlocksModel request)
         {
             instance.RemoteNodeIp = Parser.GetNetworkIp(request);
