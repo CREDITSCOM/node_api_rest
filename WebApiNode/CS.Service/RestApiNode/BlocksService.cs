@@ -1,8 +1,10 @@
 ﻿using CS.Service.RestApiNode.Models;
 using Microsoft.Extensions.Configuration;
+using NodeAPIClient.Models;
 using NodeAPIClient.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CS.Service.RestApiNode
@@ -52,7 +54,9 @@ namespace CS.Service.RestApiNode
                 request.EndSequence = request.BeginSequence - MaxBlockRangeSize;
             }
 
-            var blocks = instance.GetBlocksRange(request.BeginSequence, request.EndSequence);
+            var blocksList = instance.GetBlocksRange(request.BeginSequence, request.EndSequence);
+            if (!blocksList.Success)
+                return blocksList.Message;
          
             ResponseBlocksModel result = new ResponseBlocksModel();
             result.Success = true;
@@ -62,7 +66,7 @@ namespace CS.Service.RestApiNode
             content.ContractsApproval = request.ContractsApproval;
             content.Signatures = request.Signatures;
             content.Hashes = request.Hashes;
-            return GetBlockService.ToJson(blocks, content, false);
+            return GetBlockService.ToJson(blocksList.Blocks.Select(x => x.Block).ToList(), content, false);
         }
     }
 }
