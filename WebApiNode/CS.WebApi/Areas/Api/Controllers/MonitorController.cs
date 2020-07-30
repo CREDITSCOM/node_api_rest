@@ -1,164 +1,169 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Text;
-using System.IO;
-using CS.Db.Context;
 using CS.Service.RestApiNode;
 using CS.Service.RestApiNode.Models;
 using CS.WebApi.Controllers;
-using CS.WebApi.Infrasructure;
 using CS.WebApi.Infrasructure.AttributeFilter;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using NodeAPIClient.Services;
 
 namespace CS.WebApi.Areas.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MonitorController : ApplicationController
+    public class MonitorController : ApiBaseController
     {
+        private readonly IServiceProvider serviceProvider;
 
-        public MonitorController(IServiceProvider provider) : base(provider) { }
+        public MonitorController(IServiceProvider serviceProvider)
+        {
+            this.serviceProvider = serviceProvider;
+        }
 
-        //public string Index()
-        //{
-        //    using (var context = ServiceProvider.GetService<AppDbContext>())
-        //    {
+        private BadRequestObjectResult IsModelValid<TResult>(RequestKeyApiModel model) where TResult : AbstractResponseApiModel, new()
+        {
+            string msg = "";
+            if (model == null || !ModelState.IsValid)
+                msg = "Model is not valid";
 
-        //        context.Database.Migrate();
-        //        var t = context.RestUser.FirstOrDefault(p => p.ID == 12);
-        //        return t.Name;
-        //    }
+            if (string.IsNullOrWhiteSpace(model.PublicKey))
+                msg = "Public Key is empty or not valid";
 
-        //    return String.Empty;
-        //}
-
-        /// <summary>
-        /// Получаем 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        //[AuthKeyFilter]
-        //[HttpPost]
-        //public IActionResult GetData(RequestApiModel model)
-        //{
-        //    // Нужна проверка валидности AuthKey - guid 
-
-        //    InitAuthKey(model);
-        //    ResponseApiModel res = ServiceProvider
-        //        .GetService<MonitorService>().GetBalance(model);
-
-        //    res.Success = true;
-
-        //    //TODO: запись в базу, для логов
-
-        //    return Ok(res);//"value";
-        //}
+            return msg.Length != 0 ? BadRequest(new TResult
+            {
+                Success = false,
+                Message = msg
+            }) : null;
+        }
 
         [AuthKeyFilter]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         [HttpPost("GetBalance")]
         public ActionResult<BalanceResponseApiModel> GetBalance(RequestKeyApiModel model)
         {
-            InitAuthKey(model);
-            BalanceResponseApiModel res;
             try
             {
-                res = ServiceProvider.GetService<MonitorService>().GetBalance(model);
+                if(IsModelValid<BalanceResponseApiModel>(model) is var valid && valid != null)
+                    return valid;
 
+                InitAuthKey(model);
+
+                var res = serviceProvider.GetService<MonitorService>().GetBalance(model);
                 res.Success = true;
+
+                return Ok(res);
             }
             catch (Exception ex)
             {
-                res = new BalanceResponseApiModel();
-                res.Success = false;
-                res.Message = ex.Message;
+                return BadRequest(new BalanceResponseApiModel
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
             }
-
-            return Ok(res);
         }
 
         [AuthKeyFilter]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         [HttpPost("GetWalletInfo")]
         public ActionResult<ResponseApiModel> GetWalletInfo(RequestKeyApiModel model)
         {
-            InitAuthKey(model);
-            WalletDataResponseApiModel res;
             try
             {
-                res = ServiceProvider.GetService<MonitorService>().GetWalletData(model);
+                if (IsModelValid<ResponseApiModel>(model) is var valid && valid != null)
+                    return valid;
 
+                InitAuthKey(model);
+
+                var res = serviceProvider.GetService<MonitorService>().GetWalletData(model);
                 res.Success = true;
+
+                return Ok(res);
             }
             catch (Exception ex)
             {
-                res = new WalletDataResponseApiModel();
-                res.Success = false;
-                res.MessageError = ex.Message;
+                return BadRequest(new WalletDataResponseApiModel()
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
             }
-
-            return Ok(res);
         }
 
 
         [AuthKeyFilter]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         [HttpPost("GetContract")]
         public ActionResult<ResponseApiModel> GetContract(RequestKeyApiModel model)
         {
-            InitAuthKey(model);
-            ResponseApiModel res;
             try
             {
-                res = ServiceProvider.GetService<MonitorService>().GetContract(model);
+                if (IsModelValid<ResponseApiModel>(model) is var valid && valid != null)
+                    return valid;
 
+                InitAuthKey(model);
+
+                var res = serviceProvider.GetService<MonitorService>().GetContract(model);
                 res.Success = true;
+
+                return Ok(res);
             }
             catch (Exception ex)
             {
-                res = new ResponseApiModel();
-                res.Success = false;
-                res.Message = ex.Message;
+                return BadRequest(new ResponseApiModel()
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
             }
-            
-            return Ok(res);
         }
 
         [AuthKeyFilter]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         [HttpPost("GetTransactionInfo")]
         public ActionResult<ResponseApiModel> GetTransactionInfo(RequestGetterApiModel model)
         {
-            InitAuthKey(model);
-            TransactionInfo res;
             try
             {
-                res = ServiceProvider.GetService<MonitorService>().GetTransaction(model);
+                if (model == null || !ModelState.IsValid)
+                {
+                    return BadRequest(new TransactionInfo()
+                    {
+                        Success = false,
+                        Message = "Model is not valid"
+                    });
+                }
 
+                InitAuthKey(model);
+
+                var res = serviceProvider.GetService<MonitorService>().GetTransaction(model);
                 res.Success = true;
+
+                return Ok(res);
             }
             catch (Exception ex)
             {
-                res = new TransactionInfo();
-                res.Success = false;
-                res.Message = ex.Message;
+                return BadRequest(new TransactionInfo()
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
             }
-
-            return Ok(res);
         }
 
-
         [AuthKeyFilter]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         [HttpPost("GetFilteredTransactionsList")]
         public ActionResult<FilteredTransactionsResponseModel> GetFilteredTransactionsList(RequestFilteredListModel model)
         {
             var response = new FilteredTransactionsResponseModel();
             try
             {
-                response = ServiceProvider.GetService<MonitorService>().GetFilteredTransactions(model);
-
+                response = serviceProvider.GetService<MonitorService>().GetFilteredTransactions(model);
                 response.Success = true;
             }
             catch (Exception ex)
@@ -166,265 +171,319 @@ namespace CS.WebApi.Areas.Api.Controllers
                 response.Success = false;
                 response.Message = ex.Message;
             }
-            return response;
+            return Ok(response);
         }
 
-        //[AuthKeyFilter]
-        //[HttpPost("GetWalletTransactions")]
-        //public ActionResult<ResponseApiModel> GetWalletTransactions(RequestKeyApiModel model)
-        //{
-        //    InitAuthKey(model);
-        //    ResponseApiModel res;
-        //    try
-        //    {
-        //        res = ServiceProvider.GetService<MonitorService>().GetWalletTransactions(model);
-
-        //        res.Success = true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        res = new ResponseApiModel();
-        //        res.Success = false;
-        //        res.Message = ex.Message;
-        //    }
-
-        //    return Ok(res);
-        //}
-
-
         [AuthKeyFilter]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         [HttpPost("GetTransactionsByWallet")]
         public ActionResult<ResponseApiModel> GetTransactionsByWallet(RequestTransactionsApiModel model)
         {
-            InitAuthKey(model);
-
-            WalletTransactionsResponseApiModel res;
             try
             {
-                res = ServiceProvider.GetService<MonitorService>().GetWalletTransactions(model);
+                if (IsModelValid<WalletTransactionsResponseApiModel>(model) is var valid && valid != null)
+                    return valid;
 
+                InitAuthKey(model);
+
+                var res = serviceProvider.GetService<MonitorService>().GetWalletTransactions(model);
                 res.Success = true;
+
+                return Ok(res);
             }
             catch (Exception ex)
             {
-                res = new WalletTransactionsResponseApiModel();
-                res.Success = false;
-                res.Message = ex.Message;
-            }
-
-            return Ok(res);
-        }
-
-        [AuthKeyFilter]
-        [HttpPost("GetTokenBalance")]
-        public ActionResult<TokensResponseApiModel> GetTokenBalance(RequestTokensApiModel model)
-        {
-            InitAuthKey(model);
-            BalanceResponseApiModel res;
-            TokensResponseApiModel ret;
-            try
-            {
-                res = ServiceProvider.GetService<MonitorService>().GetBalance(model);
-                ret = new TokensResponseApiModel();
-                string[] tkns = model.Tokens.Split(", ");
-                foreach (var tok in res.Tokens) {
-                    foreach (var tt in tkns)
-                    {
-                        if (tok.Alias==tt || tok.Name ==tt)
-                        {
-                            ret.Tokens.Add(tok);
-                        }
-                    }
-                }
-                ret.Success = true;
-            }
-            catch (Exception ex)
-            {
-                ret = new TokensResponseApiModel();
-                ret.Success = false;
-                ret.Message = ex.Message;
-            }
-
-            return Ok(ret);
-        }
-
-
-        [AuthKeyFilter]
-        [HttpPost("GetListTransactionByBlock")]
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public ActionResult<ResponseApiModel> GetListTransactionByBlockId(RequestGetterApiModel model)
-        {
-            InitAuthKey(model);
-            ResponseApiModel res;
-            try
-            {
-                res = ServiceProvider.GetService<MonitorService>().GetListTransactionByBlockId(model);
-
-                res.Success = true;
-            }
-            catch (Exception ex)
-            {
-                res = new ResponseApiModel();
-                res.Success = false;
-                res.Message = ex.Message;
-            }
-
-            return Ok(res);
-        }
-
-
-        [AuthKeyFilter]
-        [HttpPost("GetListTransactionByLastBlock")]
-        public ActionResult<ResponseApiModel> GetListTransactionByLastBlock(RequestGetterApiModel model)
-        {
-            InitAuthKey(model);
-            ResponseApiModel res;
-            try
-            {
-                res = ServiceProvider.GetService<MonitorService>().GetLastBlockId(model);
-
-                model.BlockId = res.BlockId;
-                res = ServiceProvider.GetService<MonitorService>().GetListTransactionByBlockId(model);
-
-
-                res.Success = true;
-            }
-            catch (Exception ex)
-            {
-                res = new ResponseApiModel();
-                res.Success = false;
-                res.Message = ex.Message;
-            }
-
-            return Ok(res);
-        }
-
-        [AuthKeyFilter]
-        [HttpPost("GetLastBlockId")]
-        public ActionResult<ResponseApiModel> GetLastBlockId(RequestGetterApiModel model)
-        {
-            InitAuthKey(model);
-            ResponseApiModel res;
-            try
-            {
-                res = ServiceProvider.GetService<MonitorService>().GetLastBlockId(model);
-
-                model.BlockId = res.BlockId;
-                res = ServiceProvider.GetService<MonitorService>().GetListTransactionByBlockId(model);
-
-
-                res.Success = true;
-            }
-            catch (Exception ex)
-            {
-                res = new ResponseApiModel();
-                res.Success = false;
-                res.Message = ex.Message;
-            }
-
-            return Ok(res);
-        }
-
-
-        [AuthKeyFilter]
-        [HttpPost("GetTransactionByInnerId")]
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model">Required params: model.InnerId, model.PublickKey</param>
-        /// <returns></returns>
-        public ActionResult<ResponseApiModel> GetTransactionByInnerId(RequestGetterApiModel model)
-        {
-            InitAuthKey(model);
-            ResponseApiModel res;
-            try
-            {
-                res = null;
-
-                res.Success = true;
-            }
-            catch (Exception ex)
-            {
-                res = new ResponseApiModel();
-                res.Success = false;
-                res.Message = ex.Message;
-            }
-
-            return Ok(res);
-        }
-
-        [AuthKeyFilter]
-        [HttpPost("GetBlocks")]
-        public ActionResult<ResponseBlocksModel> GetBlocks(RequestBlocksModel request)
-        {
-            InitAuthKey(request);
-            string json;
-            try
-            {
-                json = ServiceProvider.GetService<BlocksService>().GetBlocksRange(request);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(InternalServerError, new ResponseBlocksModel()
+                return BadRequest(new WalletTransactionsResponseApiModel()
                 {
                     Success = false,
                     Message = ex.Message
                 });
             }
-
-            return new ContentResult()
-            {
-                Content = json,
-                ContentType = "application/json",
-                StatusCode = 200
-            };
         }
 
-        const int InternalServerError = 500;
-
         [AuthKeyFilter]
-        [HttpPost("GetNodeInfo")]
-        public ActionResult<ResponseNodeInfoModel> GetNodeInfo(RequestNodeInfoModel request)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [HttpPost("GetTokenBalance")]
+        public ActionResult<TokensResponseApiModel> GetTokenBalance(RequestTokensApiModel model)
         {
-            InitAuthKey(request);
-            var config = ServiceProvider.GetService<ParseRequestService>();
-            if(config != null)
+            try
             {
-                var svc = ServiceProvider.GetService<NodeAPIClient.Services.NodeInfoService>();
-                if (svc != null)
+                if (IsModelValid<TokensResponseApiModel>(model) is var valid && valid != null)
+                    return valid;
+
+                InitAuthKey(model);
+
+                var res = serviceProvider.GetService<MonitorService>().GetBalance(model);
+                var ret = new TokensResponseApiModel();
+
+                string[] tkns = model.Tokens.Split(", ");
+                foreach (var tok in res.Tokens)
                 {
-                    try
+                    foreach (var tt in tkns)
                     {
-                        var result = svc.GetNodeInfo(config.GetNetworkIp(request), config.GetDiagnosticPort(request), config.GetRequestTimeout(request));
-                        if (result != null)
+                        if (tok.Alias == tt || tok.Name == tt)
                         {
-                            return Ok(result);
+                            ret.Tokens.Add(tok);
                         }
-                        return BadRequest(new ResponseNodeInfoModel()
-                        {
-                            Success = false,
-                            Message = "failed to get requested info, check the node is alive"
-                        });
-                    }
-                    catch (Exception x)
-                    {
-                        return StatusCode(InternalServerError, new ResponseNodeInfoModel()
-                        {
-                            Success = false,
-                            Message = x.Message
-                        });
                     }
                 }
+
+                ret.Success = true;
+
+                return Ok(ret);
             }
-            return StatusCode(InternalServerError, new ResponseNodeInfoModel()
+            catch (Exception ex)
             {
-                Success = false,
-                Message = "Server is not properly configured"
-            });
+                return BadRequest(new TokensResponseApiModel()
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
+        }
+
+        [AuthKeyFilter]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [HttpPost("GetListTransactionByBlock")]
+        public ActionResult<ResponseApiModel> GetListTransactionByBlockId(RequestGetterApiModel model)
+        {
+            try
+            {
+                if (model == null || !ModelState.IsValid)
+                {
+                    return BadRequest(new ResponseApiModel()
+                    {
+                        Success = false,
+                        Message = "Model is not valid"
+                    });
+                }
+
+                InitAuthKey(model);
+
+                var res = serviceProvider.GetService<MonitorService>().GetListTransactionByBlockId(model);
+                res.Success = true;
+
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseApiModel()
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
+        }
+
+
+        [AuthKeyFilter]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [HttpPost("GetListTransactionByLastBlock")]
+        public ActionResult<ResponseApiModel> GetListTransactionByLastBlock(RequestGetterApiModel model)
+        {
+            try
+            {
+                if (model == null || !ModelState.IsValid)
+                {
+                    return BadRequest(new ResponseApiModel()
+                    {
+                        Success = false,
+                        Message = "Model is not valid"
+                    });
+                }
+
+                InitAuthKey(model);
+
+                var res = serviceProvider.GetService<MonitorService>().GetLastBlockId(model);
+                model.BlockId = res.BlockId;
+                res = serviceProvider.GetService<MonitorService>().GetListTransactionByBlockId(model);
+                res.Success = true;
+
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseApiModel()
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
+        }
+
+        [AuthKeyFilter]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [HttpPost("GetLastBlockId")]
+        public ActionResult<ResponseApiModel> GetLastBlockId(RequestGetterApiModel model)
+        {
+            try
+            {
+                if (model == null || !ModelState.IsValid)
+                {
+                    return BadRequest(new ResponseApiModel()
+                    {
+                        Success = false,
+                        Message = "Model is not valid"
+                    });
+                }
+
+                InitAuthKey(model);
+
+                var res = serviceProvider.GetService<MonitorService>().GetLastBlockId(model);
+                model.BlockId = res.BlockId;
+                res = serviceProvider.GetService<MonitorService>().GetListTransactionByBlockId(model);
+                res.Success = true;
+
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseApiModel()
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
+        }
+
+        [AuthKeyFilter]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [HttpPost("GetTransactionByInnerId")]
+        public ActionResult<ResponseApiModel> GetTransactionByInnerId(RequestGetterApiModel model)
+        {
+            try
+            {
+                if (model == null || !ModelState.IsValid)
+                {
+                    return BadRequest(new ResponseApiModel()
+                    {
+                        Success = false,
+                        Message = "Model is not valid"
+                    });
+                }
+
+                return Ok(new ResponseApiModel()
+                {
+                    Success = false,
+                    Message = "Method is not implemented yet"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseApiModel()
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
+        }
+
+        [AuthKeyFilter]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [HttpPost("GetBlocks")]
+        public ActionResult<ResponseBlocksModel> GetBlocks(RequestBlocksModel model)
+        {
+            try
+            {
+                if (model == null || !ModelState.IsValid)
+                {
+                    return BadRequest(new ResponseBlocksModel()
+                    {
+                        Success = false,
+                        Message = "Model is not valid"
+                    });
+                }
+
+                InitAuthKey(model);
+
+                var json = serviceProvider.GetService<BlocksService>().GetBlocksRange(model);
+                return new ResponseBlocksModel()
+                {
+                    Success = true,
+                    Message = json
+                };
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseBlocksModel()
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
+        }
+
+        [AuthKeyFilter]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        [HttpPost("GetNodeInfo")]
+        public ActionResult<ResponseNodeInfoModel> GetNodeInfo(RequestNodeInfoModel model)
+        {
+            try
+            {
+                if (model == null || !ModelState.IsValid)
+                {
+                    return BadRequest(new ResponseNodeInfoModel()
+                    {
+                        Success = false,
+                        Message = "Model is not valid"
+                    });
+                }
+
+                InitAuthKey(model);
+
+                var config = serviceProvider.GetService<ParseRequestService>();
+                if (config == null)
+                {
+                    return BadRequest(new ResponseNodeInfoModel()
+                    {
+                        Success = false,
+                        Message = "Server is not properly configured"
+                    });
+                }
+
+                var svc = serviceProvider.GetService<NodeAPIClient.Services.NodeInfoService>();
+                if (svc == null)
+                {
+                    return BadRequest(new ResponseNodeInfoModel()
+                    {
+                        Success = false,
+                        Message = "Requested service is null"
+                    });
+                }
+
+                var nodeInfo = svc.GetNodeInfo(config.GetNetworkIp(model), config.GetDiagnosticPort(model), config.GetRequestTimeout(model));
+                if (nodeInfo != null)
+                {
+                    return Ok(new ResponseNodeInfoModel() 
+                    {
+                        Success = true,
+                        NodeInfo = nodeInfo
+                    });
+                }
+
+                return BadRequest(new ResponseNodeInfoModel()
+                {
+                    Success = false,
+                    Message = "Failed to get requested info, check the node is alive"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseNodeInfoModel()
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
         }
     }
 }

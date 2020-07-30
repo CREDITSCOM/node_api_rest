@@ -70,6 +70,7 @@ namespace CS.Service.RestApiNode
                 }
             }
 
+            response.Success = true;
             return response;
         }
 

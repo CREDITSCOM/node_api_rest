@@ -1,4 +1,5 @@
-﻿var UrlRest = 'http://158.175.71.115:8000';
+﻿var UrlRest = 'http://localhost:60476/api/monitor';
+//var UrlRest = 'http://158.175.71.115:8000';
 
 
 function TRANSACTION() {
