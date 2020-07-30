@@ -1,4 +1,5 @@
-﻿using CS.Service.RestApiNode.Models;
+﻿using CS.Service.Monitor;
+using CS.Service.RestApiNode.Models;
 using NodeApi;
 using System;
 
@@ -19,6 +20,7 @@ namespace CS.Service.RestApiNode
                 //Fee = Utils.ConvertCommission(tr.Fee.Commission, roundFee),
                 Fee = Utils.FeeByIndex(tr.Fee.Commission),
                 InnerId = tr.Id,
+                UserData = System.Text.Encoding.UTF8.GetString(tr.UserFields), 
                 Time = Utils.UnixTimeStampToDateTime(tr.TimeCreation),
                 Status = "Success",//?????????????????????????????????
                 Signature = Utils.ConvertHash(tr.Signature),
