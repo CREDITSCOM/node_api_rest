@@ -78,7 +78,7 @@ namespace CS.WebApi.Areas.Api.Controllers
 
             //TODO: запись в базу, для логов. Обработка ошибок. Согласовать стандарт.
 
-        
+            
             res.FlowResult = null;
             return new JsonResult(res);//"value";
         }

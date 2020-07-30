@@ -167,30 +167,62 @@ namespace CS.Service.RestApiNode
                 else if (model.MethodApi == ApiMethodConstant.SmartMethodExecute)
                 {
                     var listParam = new List<Variant>();
-
-                    foreach (var item in model.TokenParams)
+                    var contractParams = new List<TokenParamsApiModel>();
+                    if(model.ContractParams.Count > model.TokenParams.Count)
                     {
-                        var param = new Variant();
+                        foreach (var item in model.ContractParams)
+                        {
+                            var param = new Variant();
 
-                        if (item.ValBool != null)
-                            param.V_boolean = item.ValBool.Value;
-                        else if (item.ValDouble != null)
-                            param.V_double = item.ValDouble.Value;
-                        else if (item.ValInt != null)
-                            param.V_int = item.ValInt.Value;
-                        else if (item.ValInt != null)
-                            param.V_int = item.ValInt.Value;
-                        else
-                            param.V_string = item.ValString;
-                        listParam.Add(param);
+                            if (item.ValBool != null)
+                                param.V_boolean = item.ValBool.Value;
+                            else if (item.ValDouble != null)
+                                param.V_double = item.ValDouble.Value;
+                            else if (item.ValInt != null)
+                                param.V_int = item.ValInt.Value;
+                            else if (item.ValInt != null)
+                                param.V_int = item.ValInt.Value;
+                            else
+                                param.V_string = item.ValString;
+                            listParam.Add(param);
 
+                        }
                     }
+                    else
+                    {
+                        foreach (var item in model.TokenParams)
+                        {
+                            var param = new Variant();
+
+                            if (item.ValBool != null)
+                                param.V_boolean = item.ValBool.Value;
+                            else if (item.ValDouble != null)
+                                param.V_double = item.ValDouble.Value;
+                            else if (item.ValInt != null)
+                                param.V_int = item.ValInt.Value;
+                            else if (item.ValInt != null)
+                                param.V_int = item.ValInt.Value;
+                            else
+                                param.V_string = item.ValString;
+                            listParam.Add(param);
+
+                        }
+                    }
+                    
 
                     transac.Amount = BCTransactionTools.GetAmountByDouble_C(0); // количество токенов фиксируем в параметрах
-                    transac.Target = SimpleBase.Base58.Bitcoin.Decode(model.TokenPublicKey).ToArray(); // в таргет публичный ключ токена
+                    if(model.ContractPublicKey == null || model.ContractPublicKey == "")
+                    {
+                        transac.Target = SimpleBase.Base58.Bitcoin.Decode(model.TokenPublicKey).ToArray(); // в таргет публичный ключ Token
+                    }
+                    else
+                    {
+                        transac.Target = SimpleBase.Base58.Bitcoin.Decode(model.ContractPublicKey).ToArray(); // в таргет публичный ключ Contract
+                    }
+
                     transac.SmartContract = new SmartContractInvocation()
                     {
-                        Method = model.TokenMethod,
+                        Method = (model.ContractMethod == null || model.ContractMethod == "") ? model.TokenMethod : model.ContractMethod,
                         Params = listParam
                     };
                 }
@@ -321,6 +353,20 @@ namespace CS.Service.RestApiNode
                                 Fee = feeSum,
                                 Comment = eFee.Comment
                             });
+                        }
+                    }
+                    if(request.MethodApi == ApiMethodConstant.SmartMethodExecute)
+                    {
+                        if(result.Smart_contract_result != null)
+                        {
+                            try
+                            {
+                                response.DataResponse.SmartContractResult = result.Smart_contract_result.ToString();
+                            }
+                            catch(Exception ex)
+                            {
+                                response.DataResponse.SmartContractResult = "";
+                            }
                         }
                     }
 

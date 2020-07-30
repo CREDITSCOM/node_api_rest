@@ -8,6 +8,7 @@ namespace CS.Service.RestApiNode.Models
     {
         public RequestApiModel()
         {
+            ContractParams = new List<TokenParamsApiModel>();
             TokenParams = new List<TokenParamsApiModel>();
         }
 
@@ -39,8 +40,9 @@ namespace CS.Service.RestApiNode.Models
 
 
         public string TokenPublicKey { get; set; }
-
         public string TokenMethod { get; set; }
+        public string ContractPublicKey { get; set; }
+        public string ContractMethod { get; set; }
 
 
         /// <summary>
@@ -48,6 +50,7 @@ namespace CS.Service.RestApiNode.Models
         /// </summary>
         public string SmartContractSource { get; set; }
 
+        public ICollection<TokenParamsApiModel> ContractParams { get; set; }
         public ICollection<TokenParamsApiModel> TokenParams { get; set; }
 
         /// <summary>

@@ -257,8 +257,8 @@ namespace CS.Test.Unit.Api
             model.NetworkIp = "165.22.220.8";
             model.NetworkPort = "9090";
             model.NetworkAlias = "MainNet";
-            model.TokenMethod = "balanceOf";
-            model.TokenParams.Add(new TokenParamsApiModel() { ValString = "FeFjpcsfHErXPk5HkfVcwH6zYaRT2xNytDTeSjfuVywt" }); //кастомер
+            model.ContractMethod = "balanceOf";
+            model.ContractParams.Add(new TokenParamsApiModel() { ValString = "FeFjpcsfHErXPk5HkfVcwH6zYaRT2xNytDTeSjfuVywt" }); //кастомер
 
             string message = service.PackTransactionByApiModel(model).TransactionPackagedStr;//changed to model
             Assert.IsNotNull(message);

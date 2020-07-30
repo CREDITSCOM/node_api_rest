@@ -31,12 +31,12 @@ namespace CS.Test.Unit.Api
                 Amount = 0M,
                 MethodApi = ApiMethodConstant.SmartMethodExecute,
                 Fee = 0.1m,
-                TokenMethod = tokenMethod
+                ContractMethod = tokenMethod
             };
 
             if(methodParams != null)
                 foreach (var tokenParamsApiModel in methodParams)
-                    model.TokenParams.Add(tokenParamsApiModel);
+                    model.ContractParams.Add(tokenParamsApiModel);
 
             string message = service.PackTransactionByApiModel(model).TransactionPackagedStr;//changed to model
             Assert.IsNotNull(message);

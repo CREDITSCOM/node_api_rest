@@ -19,5 +19,6 @@ namespace CS.Service.RestApiNode.Models
 
         public Decimal ActualSum { get; set; }
         public Decimal RecommendedFee { get; set; }
+        public string SmartContractResult { get; set; }
     }
 }
